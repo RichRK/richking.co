@@ -1,0 +1,171 @@
+/* advisory about IE9 use */
+
+#ie9 {
+
+	display: block;
+	position: fixed;
+	top: 2.5vh;
+	right: 2.5vh;
+	width: 14vw;
+	background: red;
+	text-align: center;
+	padding: 1vh;
+	padding-bottom: 2vh;
+	z-index: 50;
+}
+
+#ie9 h2 {
+
+	margin-bottom: 1vh;
+	margin-top: 1vh;
+	font-weight: bold;
+	font-size: 2vh;
+}
+
+#ie9 p {
+
+	margin-bottom: 1vh;
+	font-family: "Verdana";
+	font-size: 1.75vh;
+	color: #fff;
+	line-height: 1.25;
+}
+
+#ie9 ul li {
+
+	font-family: "Verdana";
+	font-size: 1.75vh;
+	color: #fff;
+	line-height: 1.25;
+	border-bottom: 1px dashed #fff;
+	display: inline-block;
+}
+
+#ie9 h3 {
+
+	position: absolute;
+	top: 1.75vh;
+	right: 1.5vh;
+	font-size: 2vh;
+	font-family: "Cantarell";
+	font-weight: bold;
+	color: #fff;
+	cursor: pointer;
+}
+
+/* difference in viewport unit interpretation compared to Firefox + Chrome */
+
+#leftArrow {
+
+	left: 4vh;
+}
+
+#leftArrowClone {
+
+	left: 5.25vh;
+}
+
+#rightArrow {
+
+	right: 4vh;
+}
+
+#rightArrowClone {
+
+	right: 5.25vh;
+}
+
+/* no support for flexbox */
+
+#wrapper span,#container span {
+
+	position: relative;
+	top: 50%;
+	-ms-transform: translate(0, -50%);
+	-webkit-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+}
+
+.videoContainer h3 {
+
+	position: relative;
+	top: 42%;
+	border: 1px solid rgba(0,0,0,0.25); /* makes up for loss of contrast as a result of no multiple backgrounds */
+}
+
+.videoContainer .duration {
+
+	position: relative;
+	top: 40%;
+}
+
+.playCircle {
+
+	position: relative;
+	left: 5.5%;
+	top: 32%;
+}
+
+.playButton {
+
+	position: relative;
+	left: 3%;
+	top: 42%;
+}
+
+.videoContainer:hover > .duration {
+
+	-ms-transform: translateY(0%);
+	transform: translateY(0%);
+}
+
+/* no support for multiple backgrounds */
+
+html[id="video"] a[href*="casa-cambranes"] .videoContainer {
+
+	background: url(../images/video6.jpg) repeat 0 0;
+	background-size: cover;
+}
+
+html[id="video"] a[href*="casa-de-lis"] .videoContainer {
+
+	background: url(../images/video5.jpg) repeat 0 0;
+	background-size: cover;
+}
+
+html[id="video"] a[href*="raleigh-roadtrip"] .videoContainer {
+
+	background: url(../images/video4.jpg) repeat 0 0;
+	background-size: cover;
+}
+
+html[id="video"] a[href*="kit-list"] .videoContainer {
+
+	background: url(../images/video3.jpg) repeat 0 0;
+	background-size: cover;
+}
+
+html[id="video"] a[href*="corcovado-trek"] .videoContainer {
+
+	background: url(../images/video2.jpg) repeat 0 0;
+	background-size: cover;
+}
+
+html[id="video"] a[href*="turrisantos-trek"] .videoContainer {
+
+	background: url(../images/video1.jpg) repeat 0 0;
+	background-size: cover;
+}
+
+/* no support for pointer-events */
+
+.modalContainer {
+
+	opacity: 1;
+	display: none;
+}
+
+.modalContainer:target {
+
+	display: block;
+}

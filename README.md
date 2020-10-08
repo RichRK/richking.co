@@ -31,6 +31,6 @@ Original PHP code was:
 
 ?>
 
-2. Do the random background better? Just disable it entirely and have it be consistent...?
+2. Create a JavaScript version of the random background.
 
 3. Need to get the form submission working with Netlify's approach.

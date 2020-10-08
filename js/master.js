@@ -1,79 +1,91 @@
 
-$(document).ready(function(){
+// This randomly chooses a background for use on all pages other than the home page.
+// Once set, the background persists for 24 hours.
 
-    var background = retrieveBackgroundFromLocalStorage();
+var backgrounds = [ 'bg-01.jpg', 'bg-03.jpg', 'bg-04.jpg', 'bg-05.jpg', 'bg-06.jpg', 'bg-07.jpg', 'bg-08.jpg', 'bg-09.jpg' ];
 
-    if ( !background ) {
-        
-        background = getRandomBackground();
-        saveBackgroundToLocalStorage( background );
-    }
 
-    injectBackgroundIntoHtml( background );
+
+$( document ).ready( function() {
+
+    // 1. Right now jQuery isn't present on all pages.
+
+    injectBackgroundIntoPage( retrieveBackground() );
 });
 
 
 
-function retrieveBackgroundFromLocalStorage() {
+function injectBackgroundIntoPage( background ) {
 
-    if ( /* local storage has a background */ ) {
+    var styling = '';
 
-        return 'storedBackgroundId';
+    // 2. Must define the style above.
+
+    var styleTag = document.createElement( 'style' );
+    styleTag.textContent = styling;
+
+    document.head.append( styleTag );
+}
+
+
+
+function retrieveBackground() {
+
+    var background = localStorage.getItem( 'background' ),
+        dateIsValid = isDateValid( localStorage.getItem( 'backgroundDate' ));
+
+    if ( dateIsValid && background != null ) {
+
+        return background;
     }
 
-    else {
-
-        return null;
-    }
+    else { return getRandomBackground(); }
 };
+
+
+
+function isDateValid( storedDate ) {
+
+    var currentDate = Date.now(),
+        difference = currentDate - ( storedDate || 1 );
+
+    if ( storedDate != null && difference < 86400000 ) {
+
+        return true;
+    }
+
+    else { return false; }
+}
 
 
 
 function getRandomBackground() {
 
-    // bg-02 is too dark for general use here but does get used elsewhere.
+    background = backgrounds[ getRandomInt( 0, backgrounds.length ) ];
 
-    var backgrounds = [
-        
-        'bg-01.jpg',
-        'bg-03.jpg',
-        'bg-04.jpg',
-        'bg-05.jpg',
-        'bg-06.jpg',
-        'bg-07.jpg',
-        'bg-08.jpg',
-        'bg-09.jpg'
-    ];
+    saveBackgroundToLocalStorage( background );
 
-    chosenBackground = backgrounds[getRandomIntInclusive( 1, backgrounds.length )];
-
-    return chosenBackground;
+    return background;
 };
 
 
 
-function getRandomIntInclusive( min, max ) {
+function getRandomInt( min, max ) {
 
     // Returns a random whole number between two numbers.
-    // Both the minimum and maximum values are inclusive.
+    // The minimum is inclusive, the maximum is not.
 
     min = Math.ceil( min );
     max = Math.floor( max );
 
-    return Math.floor( Math.random() * ( max - min + 1 ) + min );
+    return Math.floor( Math.random() * ( max - min ) + min );
 }
 
 
 
 function saveBackgroundToLocalStorage( background ) {
 
-
-}
-
-
-
-function injectBackgroundIntoHtml( background ) {
-
-    
+    localStorage.setItem('background', background);
+    localStorage.setItem('backgroundDate', Date.now() );
 }
 

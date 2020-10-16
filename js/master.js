@@ -16,7 +16,7 @@ $( document ).ready( function() {
 
 function uglyUserAgentSniffing() {
 
-    // Ugly user-agent sniffing because I built this site back in 2014 and it seemed like a good idea at the time. 🤢 In 2020 I converted this from a PHP implementation to JavaScript, as a temporary solution for hosting on Netlify.
+    // Ugly user-agent sniffing because I built this site back in 2014 and it seemed like a good idea at the time. 🤢 In 2020 I converted this from a PHP implementation to JavaScript, as a temporary solution for hosting on Netlify. Site rebuild to come...
 
     var currentPage = document.getElementsByTagName("HTML")[0].getAttribute("data-page");
 

@@ -31,9 +31,16 @@ function uglyUserAgentSniffing() {
 
     // Ugly user-agent sniffing because I built this site back in 2014 and it seemed like a good idea at the time. 🤢 In 2020 I converted this from a PHP implementation to JavaScript, as a temporary solution for hosting on Netlify. Site rebuild to come...
 
+    var suffix = "";
+
+    if ( currentPage() != "" ) {
+
+        suffix = "/";
+    }
+
     if ( navigator.userAgent.search( /(iPhone|iPad|Android|webOS|BlackBerry|iPod)/ ) >= 0 ) {
 
-        window.location.replace( 'http://m.richking.co/' + currentPage() );
+        window.location.replace( 'http://m.richking.co/' + currentPage() + suffix );
     }
 }
 

@@ -9,8 +9,21 @@ var backgrounds = [ 'bg-01.jpg', 'bg-03.jpg', 'bg-04.jpg', 'bg-05.jpg', 'bg-06.j
 $( document ).ready( function() {
 
     uglyUserAgentSniffing();
-    injectBackgroundIntoPage( retrieveBackground() );
+
+    if ( currentPage() != "" ) {
+
+        // i.e. if the user isn't on the home page...
+
+        injectBackgroundIntoPage( retrieveBackground() );
+    }
 });
+
+
+
+function currentPage() {
+
+    return document.getElementsByTagName("HTML")[0].getAttribute("data-page");
+}
 
 
 
@@ -18,14 +31,10 @@ function uglyUserAgentSniffing() {
 
     // Ugly user-agent sniffing because I built this site back in 2014 and it seemed like a good idea at the time. 🤢 In 2020 I converted this from a PHP implementation to JavaScript, as a temporary solution for hosting on Netlify. Site rebuild to come...
 
-    var currentPage = document.getElementsByTagName("HTML")[0].getAttribute("data-page");
-
     if ( navigator.userAgent.search( /(iPhone|iPad|Android|webOS|BlackBerry|iPod)/ ) >= 0 ) {
 
-        window.location.replace('http://m.richking.co/');
+        window.location.replace( 'http://m.richking.co/' + currentPage() );
     }
-
-    document.getElementsByTagName("HTML")[0].getAttribute("data-page")
 }
 
 

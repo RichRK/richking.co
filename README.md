@@ -1,3 +1,3 @@
 # richking.co
 
-1. Previously mobile and tablet would redirect to m.richking.co. What's the best solution to this? (Maybe I can host m.richking.co as a separate repository and use window.location.replace to redirect as before)
+Built in 2014 as a portfolio for my photography and videography work — modified in 2020 for hosting on Netlify.

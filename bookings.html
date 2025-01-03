@@ -1,0 +1,661 @@
+<!doctype html>
+
+
+
+<html lang="en">
+
+	
+
+	<head>
+
+
+
+		<title>Remember When&mdash;?</title>
+
+
+
+		<link rel="preload" href="../fonts/Spectral-Regular.woff2" as="font">
+
+		<link rel="preload" href="../fonts/Spectral-Medium.woff2" as="font">
+
+		<link rel="preload" href="../fonts/Raleway-Regular.woff2" as="font">
+
+		<link rel="preload" href="../fonts/Raleway-SemiBold.woff2" as="font">
+
+		<link rel="preload" href="../fonts/Raleway-SemiBoldItalic.woff2" as="font">
+
+		<link rel="preload" href="../fonts/Poppins-Medium.woff2" as="font">
+
+		
+
+		<link rel="stylesheet" type="text/css" href="../master.css">
+
+		<link rel="stylesheet" type="text/css" href="../jqueryui/jquery-ui.min.css">
+
+
+
+		<meta charset="utf-8">
+
+		<meta name="viewport" content="width=device-width,maximum-scale=1.0">
+
+
+
+	</head>
+
+
+
+	<body data-page="bookings">
+
+
+
+		<nav>
+
+
+
+			<div id="navIcon" class="unscrolled">
+
+
+
+				<p>Menu</p>
+
+
+
+			</div>
+
+
+
+			<div id="pages">
+
+
+
+				<ul>
+
+
+
+					<i class="material-icons top-right">close</i>
+
+
+
+					<a href="../"><i class="material-icons">home</i><li>Home</li></a>
+
+					<a href="../portfolio/"><i class="material-icons">gesture</i><li>Portfolio</li></a>
+
+					<a href="../bookings/"><i class="material-icons">event</i><li>Bookings</li></a>
+
+					<a href="../about/"><i class="material-icons">sentiment_very_satisfied</i><li>About</li></a>
+
+					<a href="../contact/"><i class="material-icons">email</i><li>Contact</li></a>
+
+
+
+				</ul>
+
+
+
+			</div>
+
+
+
+		</nav>
+
+
+
+		<header>
+
+
+
+			<h1>Bookings</h1>
+
+
+
+		</header>
+
+
+
+		<section id="content">
+
+
+
+			<div class="portion">
+
+						
+
+				<div class="segment two-thirds">
+
+
+
+					<h2>Interested?</h2>
+
+
+
+					<button class="primary">Yes! Let's get booking</button>
+
+
+
+					<h2>How does this work exactly?</h2>
+
+
+
+					<p>Once everyone has finished eating and started mingling I'll make my way around and talk to people. I'll ask some probing questions&mdash;I can get away with it because I'm holding a camera 😉 &mdash;and that's it!</p>
+
+
+
+					<p>If there are particular guests you want to make sure I don't miss (family members, for example) just point me in their direction. I'll stay until the last person stumbles home or until I've spoken with everyone.</p>
+
+
+
+					<p>I can also arrive earlier in the day and do some regular wedding videography that covers the ceremony and the day itself &mdash; just let me know if you'd like this.</p>
+
+
+
+				</div>
+
+
+
+			</div>
+
+
+
+			<form name="bookings" data-netlify="true" netlify-honeypot="areYouAHuman">
+
+
+
+				<i class="material-icons top-right">close</i>
+
+
+
+				<div class="submission-response">
+
+
+
+					<i class="material-icons"></i>
+
+					<h4></h4>
+
+					<h5></h5>
+
+					<button>Ok, got it</button>
+
+
+
+				</div>
+
+
+
+				<div id="question-container">
+
+
+
+					<div id="progress-container">
+
+
+
+						<div id="progress"></div>
+
+
+
+					</div>
+
+						
+
+					<div class="question visibleF">
+
+						
+
+						<label for="name1">
+
+
+
+							<h2>Awesome. What's your name?</h2>
+
+
+
+							<input id="name1" type="text" name="name1" spellcheck="false" autocomplete="off">
+
+
+
+						</label>
+
+
+
+						<div class="footnote"><p>Privacy info! Anything you submit here will only be used to contact you and in planning your video.</p></div>
+
+
+
+					</div>
+
+
+
+					<div class="question">
+
+
+
+						<label for="name2">
+
+						
+
+							<h2>And what's the name of your other half?*</h2>
+
+
+
+							<input id="name2" type="text" name="name2" spellcheck="false" autocomplete="off">
+
+
+
+						</label>
+
+
+
+						<div class="footnote"><p>*Snugglemuffin doesn't count.</p></div>
+
+
+
+					</div>
+
+
+
+					<div class="question">
+
+
+
+						<label for="email">
+
+						
+
+							<h2>Have one of those cool joint wedding email addresses?</h2>
+
+
+
+							<input id="email" type="email" name="email" spellcheck="false" autocomplete="off">
+
+
+
+						</label>
+
+
+
+						<div class="optional">
+
+
+
+							<input id="emailCheckbox" type="checkbox">
+
+							<label for="emailCheckbox">We have two email addresses<i class="material-icons"></i></label>
+
+
+
+							<input id="email2" type="email" name="email2" spellcheck="false" autocomplete="off">
+
+
+
+						</div>
+
+
+
+					</div>
+
+
+
+					<div class="question">
+
+
+
+						<label for="phone">
+
+						
+
+							<h2>Best phone number to reach you on?</h2>
+
+
+
+							<input id="phone" type="tel" name="phone" spellcheck="false" autocomplete="off">
+
+
+
+						</label>
+
+
+
+					</div>
+
+
+
+					<div class="question">
+
+
+
+						<label for="years">
+
+						
+
+							<h2>Which year does your wedding fall in?</h2>
+
+
+
+							<select name="year">
+
+
+
+
+								<!-- The first <option> is always selected and blank. The rest are filled by JavaScript with the appropriate years. -->
+
+								<option selected></option>
+
+								<option></option>
+
+								<option></option>
+
+								<option></option>
+
+								<option></option>
+
+
+
+							</select>
+
+
+
+						</label>
+
+
+
+					</div>
+
+
+
+					<div class="question">
+
+
+
+						<label for="months">
+
+						
+
+							<h2>Which month?</h2>
+
+
+
+							<select name="month">
+
+
+
+								<option selected></option>
+
+								<option value="January">January</option>
+
+								<option value="February">February</option>
+
+								<option value="March">March</option>
+
+								<option value="April">April</option>
+
+								<option value="May">May</option>
+
+								<option value="June">June</option>
+
+								<option value="July">July</option>
+
+								<option value="August">August</option>
+
+								<option value="September">September</option>
+
+								<option value="October">October</option>
+
+								<option value="November">November</option>
+
+								<option value="December">December</option>
+
+
+
+							</select>
+
+
+
+						</label>
+
+
+
+					</div>
+
+
+
+					<div class="question">
+
+
+
+						<label for="days">
+
+						
+
+							<h2>And the date?</h2>
+
+
+
+							<select name="day">
+
+
+
+								<option selected></option>
+
+								<option value="1st">1st</option>
+
+								<option value="2nd">2nd</option>
+
+								<option value="3rd">3rd</option>
+
+								<option value="4th">4th</option>
+
+								<option value="5th">5th</option>
+
+								<option value="6th">6th</option>
+
+								<option value="7th">7th</option>
+
+								<option value="8th">8th</option>
+
+								<option value="9th">9th</option>
+
+								<option value="10th">10th</option>
+
+								<option value="11th">11th</option>
+
+								<option value="12th">12th</option>
+
+								<option value="13th">13th</option>
+
+								<option value="14th">14th</option>
+
+								<option value="15th">15th</option>
+
+								<option value="16th">16th</option>
+
+								<option value="17th">17th</option>
+
+								<option value="18th">18th</option>
+
+								<option value="19th">19th</option>
+
+								<option value="20th">20th</option>
+
+								<option value="21st">21st</option>
+
+								<option value="22nd">22nd</option>
+
+								<option value="23rd">23rd</option>
+
+								<option value="24th">24th</option>
+
+								<option value="25th">25th</option>
+
+								<option value="26th">26th</option>
+
+								<option value="27th">27th</option>
+
+								<option value="28th">28th</option>
+
+								<option value="29th">29th</option>
+
+								<option value="30th">30th</option>
+
+								<option value="31st">31st</option>
+
+
+
+							</select>
+
+
+
+						</label>
+
+
+
+					</div>
+
+
+
+					<div class="question">
+
+
+
+						<label for="venue">
+
+						
+
+							<h2>Great. What's your reception venue?</h2>
+
+
+
+							<input id="venue" type="text" name="venue" spellcheck="false" autocomplete="off">
+
+
+
+						</label>
+
+
+
+						<div class="optional">
+
+
+
+							<input id="venueCheckbox" type="checkbox">
+
+							<label for="venueCheckbox">We'd like you to be at the ceremony too<i class="material-icons"></i></label>
+
+
+
+							<input id="venue2" type="text" name="venue2" spellcheck="false" autocomplete="off">
+
+
+
+						</div>
+
+
+
+					</div>
+
+
+
+					<div class="question">
+
+
+
+						<label for="miscellaneous">
+
+						
+
+							<h2>Finally: anything else I should know about?</h2>
+
+
+
+							<textarea id="miscellaneous" name="miscellaneous" placeholder="My pet hyena will be there and he likes to bite, please bring a tetanus shot" autocomplete="off"></textarea>
+
+
+
+						</label>
+
+
+
+					</div>
+
+
+
+					<div id="controls-container">
+
+
+
+						<button id="previous-button" class="navigation" type="button">Previous</button>
+
+						<button id="next-button" class="navigation clickable" type="button">Next</button>
+
+						<button id="submit-button" type="button">Done!</button>
+
+
+
+					</div>
+
+
+
+				</div>
+
+
+
+				<select class="areYouAHuman" name="areYouAHuman" tabindex="-1">
+
+
+
+
+					<option selected></option>
+
+					<option value="Yes">Yes</option>
+
+					<option value="No">No</option>
+
+
+
+
+				</select>
+
+
+			</form>
+
+
+
+		</section>
+
+
+
+		<footer>
+
+
+
+			<span id="icon-loader"><i class="material-icons">featured_video</i></span>
+
+
+
+			<p>Handcrafted in the Lower Mainland. 🏕️</p>
+
+
+
+			<h6><a href="../privacy/">Privacy information</a> | &copy; <span class="currentYear"></span></h6>
+
+
+
+		</footer>
+
+		
+
+		<script src="../jquery-3.3.1.min.js"></script>
+
+		<script src="../master.js"></script>
+
+		<script src="../waypoints.js"></script>
+
+		<script src="../jqueryui/jquery-ui.min.js"></script>
+
+		
+
+	</body>
+
+	
+
+</html>

@@ -1,72 +1,40 @@
-<!DOCTYPE html>
-
-<!-- All text, images and video available on this site copyright 2014 Richard King. -->
-
-<html id="index" data-page="">
+<!doctype html>
 
 
+
+<html lang="en">
+
+	
 
 	<head>
 
 
 
-		<title>Rich King | Photography &amp; Videography</title>
+		<title>Remember When&mdash;?</title>
 
 
 
-		<link rel="stylesheet" href="/css/styles.css">
+		<link rel="preload" href="fonts/MaterialIcons-Regular.woff2" as="font">
 
-		<link rel="stylesheet" href="/css/jquery.vegas.min.css">
+		<link rel="preload" href="fonts/Spectral-Regular.woff2" as="font">
 
+		<link rel="preload" href="fonts/Spectral-Medium.woff2" as="font">
 
+		<link rel="preload" href="fonts/Raleway-Regular.woff2" as="font">
 
-		<!--[if IE 9]>
+		<link rel="preload" href="fonts/Raleway-SemiBold.woff2" as="font">
 
-
-
-		<link rel="stylesheet" href="/css/ie9.css">
-
-
-
-		<![endif]-->
-
-
-
-		<!--[if IE 8]>
-
-
-
-		<script>
-
-
-
-			window.location.replace("/unsupported");
-
-
-
-		</script>
-
-
-
-		<![endif]-->
-
-
-
-		<link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
-
-		<link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
-
-		<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
-
-		<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
-
-		<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+		<link rel="preload" href="fonts/Poppins-Medium.woff2" as="font">
 
 		
 
-		<meta name="msapplication-TileColor" content="#191919">
+		<link rel="stylesheet" type="text/css" href="master.css">
 
-		<meta name="application-name" content="Rich King">
+
+
+		<meta charset="utf-8">
+
+		<meta name="viewport" content="width=device-width,maximum-scale=1.0">
 
 
 
@@ -74,99 +42,135 @@
 
 
 
-	<body>
+	<body data-page="home">
 
 
 
-		<div id="header">
+		<nav>
 
 
 
-			<h1>Rich<br>King</h1>
+			<div id="navIcon" class="unscrolled">
 
 
 
-		</div>
+				<p>Menu</p>
 
 
 
-		<div id="nav">
+			</div>
 
 
 
-			<ul>
+			<div id="pages">
 
 
 
-				<li><a href="/photo/">Photo</a></li>
+				<ul>
 
-				<li><a href="/video/">Video</a></li>
 
-				<li><a href="/contact/">Contact</a></li>
 
+					<i class="material-icons top-right">close</i>
 
 
-			</ul>
 
+					<a href="/"><i class="material-icons">home</i><li>Home</li></a>
 
+					<a href="portfolio/"><i class="material-icons">gesture</i><li>Portfolio</li></a>
 
-		</div>
+					<a href="bookings/"><i class="material-icons">event</i><li>Bookings</li></a>
 
+					<a href="about/"><i class="material-icons">sentiment_very_satisfied</i><li>About</li></a>
 
+					<a href="contact/"><i class="material-icons">email</i><li>Contact</li></a>
 
-		<img src="/images/loader.gif">
 
 
+				</ul>
 
-		<div id="fontLoader">
 
 
+			</div>
 
-			<p>Normal.</p>
 
-			<p>Italic.</p>
 
+		</nav>
 
 
-		</div>
 
+		<header>
 
 
-		<div id="sidenav">
 
+			<video autoplay loop muted poster="video/poster.jpg">
 
 
-			<div id="lineIcon">
 
+				<!-- Need to add WebM. -->
 
 
-				<div class="navLine"></div>
 
-				<div class="navLine"></div>
+				<source src="video/opt.mp4" type="video/mp4">
 
-				<div class="navLine"></div>
 
 
+			</video>
 
-				<div id="pageList">
 
 
+			<div id="logo">
 
-					<ul>
 
 
+				<img src="images/logo.png" alt="Remember When">
 
-						<a href="/"><li>Home</li></a>
 
-						<a href="/photo/"><li>Photo</li></a>
 
-						<a href="/video/"><li>Video</li></a>
+			</div>
 
-						<a href="/contact/"><li>Contact</li></a>
 
 
+			<h1><i class="material-icons down-arrow">keyboard_arrow_down</i></h1>
 
-					</ul>
+
+
+		</header>
+
+
+
+		<section id="content">
+
+
+
+			<div class="portion">
+
+						
+
+				<div class="segment text">
+
+
+
+					<h2>Your wedding story &mdash; told by the people that know you best.</h2>
+
+
+
+					<p>The big day is all about you! But it's also about those idiots who've been by your side the whole time. (Some call them friends and family.) I chat with them and get them talking about those embarrassing moments you'd rather forget.</p>
+
+
+
+					<p>Occasionally the ones you want to remember too. 😇</p>
+
+
+
+				</div>
+
+
+
+				<div class="segment photo">
+
+
+
+					<img src="images/still1.jpg" alt="Interview still">
 
 
 
@@ -178,78 +182,116 @@
 
 
 
-		</div>
+			<div class="portion">
 
 
 
-		<div id="ie9">
+				<div class="segment photo">
 
 
 
-			<h2>Notice</h2>
+					<img src="images/still2.jpg" alt="Interview still">
 
 
 
-			<p>You are currently using Internet Explorer version 9. While this website will work correctly, you will be seeing a basic version of the site. To view this site as it was intended, please visit again using any of the following fully supported browsers:</p>
+				</div>
 
 
 
-			<ul>
+				<div class="segment text">
 
 
 
-				<li><a href="http://www.google.com/chrome/">Google Chrome</a></li>
-
-				<li><a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a></li>
-
-				<li><a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie/">Internet Explorer 10&#43;</a></li>
+					<h2>They're the heart and soul.</h2>
 
 
 
-			</ul>
+					<p>Let's face it, your people are what make your day unique. There's plenty you'll miss while you're cutting cakes and talking to Uncle Jack about his bad foot, but these candid moments give you a peek behind the scenes.</p>
 
 
 
-			<h3>x</h3>
+					<p>(Which kinda means everyone gets free rein to badmouth you. 😉 )</p>
 
 
 
-		</div>
+				</div>
 
 
 
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
-		<script src="/js/master.js"></script>
-
-		<script src="/js/jquery.vegas.min.js"></script>
-
-		<script src="/js/vegasSettings.js"></script>
+			</div>
 
 
 
-		<script>
+			<div class="portion">
 
 
 
-			$('#ie9 h3').click(function() {
+				<div class="segment text">
 
 
 
-				$('#ie9').css('display','none');
+					<h2>Nostalgia at its best.</h2>
 
 
 
-			});
+					<p>Everyone has something great to share &mdash; it's one of the reasons I love this. But you also end up with a video that's always there to look back on.</p><p>Life gets in the way, memories can fade, but this snapshot won't go anywhere.</p>
 
 
 
-		</script>
+				</div>
 
 
+
+				<div class="segment photo">
+
+
+
+					<img src="images/still3.jpg" alt="Interview still">
+
+
+
+				</div>
+
+
+
+			</div>
+
+
+
+		</section>
+
+
+
+		<footer>
+
+
+
+			<span id="icon-loader"><i class="material-icons">featured_video</i></span>
+
+
+
+			<p>Handcrafted in the Lower Mainland. 🏕️</p>
+
+
+
+			<h6><a href="privacy/">Privacy information</a> | &copy; <span class="currentYear"></span></h6>
+
+
+
+		</footer>
+
+		
+
+		<script src="jquery-3.3.1.min.js"></script>
+
+		<script src="master.js"></script>
+
+		<script src="waypoints.js"></script>
+
+		
 
 	</body>
 
-
+	
 
 </html>

@@ -2762,17 +2762,6 @@ html[id="contact"] form textarea {
 
 
 
-html[id="contact"] #areYouAHuman {
-
-	display: block !important;
-	top: 0px;
-	left: 0px;
-	position: fixed;
-	transform: skew(90deg);
-}
-
-
-
 #overlay {
 
 

@@ -688,15 +688,6 @@ body[id="contact"] textarea {
 	border: 1px solid #000;
 }
 
-body[id="contact"] #areYouAHuman {
-
-	display: block !important;
-	top: 0px;
-	left: 0px;
-	position: fixed;
-	transform: skew(90deg);
-}
-
 /* MESSAGE PAGE IDENTIFIERS */
 
 body[id="message"] {

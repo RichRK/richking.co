@@ -1,0 +1,66 @@
+---
+/**
+ * The white card used by both /thanks and /404 — the 2014 stylesheet's "DIALOG"
+ * pages. Identical markup on both, so it lives here rather than twice.
+ */
+interface Props {
+  heading: string;
+}
+
+const { heading } = Astro.props;
+---
+
+<main id="container">
+  <div class="notice">
+    <h3>{heading}</h3>
+    <p><slot /></p>
+  </div>
+</main>
+
+<style>
+  #container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4vh 5vw 12vh;
+  }
+
+  .notice {
+    background: var(--surface);
+    width: min(35vw, 560px);
+    padding: 5vh 3vw;
+    text-align: center;
+  }
+
+  .notice h3 {
+    font-family: var(--font-display);
+    font-size: 4.1vh;
+    text-transform: none;
+    color: var(--paper);
+    margin: 0 auto 4vh;
+  }
+
+  .notice p {
+    font-family: var(--font-display);
+    font-size: 2vh;
+    color: var(--paper);
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 48rem) {
+    .notice {
+      width: 90vw;
+      padding: 8vw 6vw;
+    }
+
+    .notice h3 {
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+
+    .notice p {
+      font-size: 15px;
+    }
+  }
+</style>

@@ -1,0 +1,70 @@
+---
+import type { ImageMetadata } from 'astro';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Filmstrip from '../../components/Filmstrip.astro';
+import ThumbStrip from '../../components/ThumbStrip.astro';
+import type { Album } from '../../loaders/albums';
+
+export async function getStaticPaths() {
+  const albums = await getCollection('albums');
+
+  return albums.map((entry) => ({
+    params: { album: entry.data.slug },
+    props: { album: entry.data as Album },
+  }));
+}
+
+interface Props {
+  album: Album;
+}
+
+const { album } = Astro.props;
+
+/*
+ * The loader records each photo as a path string rather than an ImageMetadata,
+ * because `image()` inside a custom loader resolves relative to the entry file
+ * and gets awkward fast. Resolving here instead keeps the loader free of
+ * Astro's image internals — and this glob is what lets a newly dropped-in
+ * folder be optimised with no other change.
+ */
+const modules = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/photos/**/*.{jpg,jpeg,JPG,JPEG}',
+  { eager: true },
+);
+
+const images: Record<string, ImageMetadata> = Object.fromEntries(
+  Object.entries(modules).map(([path, module]) => [path, module.default]),
+);
+
+const description = album.description ?? `Photographs from ${album.title} by Rich King.`;
+---
+
+<BaseLayout
+  title={`Rich King | ${album.title}`}
+  description={description}
+  page={album.slug}
+  pageId="subphoto"
+>
+  <Header section="Photo" sectionHref="/photo" fixed />
+  <ThumbStrip album={album} images={images} />
+  <Filmstrip album={album} images={images} />
+</BaseLayout>
+
+<style is:global>
+  /* The filmstrip owns the viewport; the page itself must not scroll. */
+  html[id='subphoto'],
+  html[id='subphoto'] body {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  @media (max-width: 48rem) {
+    html[id='subphoto'],
+    html[id='subphoto'] body {
+      overflow: visible;
+      height: auto;
+    }
+  }
+</style>

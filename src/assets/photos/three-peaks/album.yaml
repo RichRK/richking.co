@@ -1,0 +1,34 @@
+title: Three Peaks
+description: "Comprising of Snowdon, Ben Nevis and Scafell Pike, the Three Peaks make up the three
+  tallest mountains in the UK. Our challenge: scaling them all in 6 days, relying only on hostels
+  and public transport. Rock, tundra and sheep dominate."
+order: 8
+photos:
+  001.jpg:
+    thumbPosition: left
+  002.jpg:
+    thumbPosition: center
+  003.jpg:
+    thumbPosition: center
+  004.jpg:
+    thumbPosition: center
+  005.jpg:
+    thumbPosition: center
+  006.jpg:
+    thumbPosition: bottom
+  007.jpg:
+    thumbPosition: left top
+  008.jpg:
+    thumbPosition: right
+  009.jpg:
+    thumbPosition: center
+  010.jpg:
+    thumbPosition: left
+  011.jpg:
+    thumbPosition: right
+  012.jpg:
+    thumbPosition: right
+  013.jpg:
+    thumbPosition: left top
+  014.jpg:
+    thumbPosition: center

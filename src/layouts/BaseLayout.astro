@@ -1,0 +1,118 @@
+---
+import SideNav from '../components/SideNav.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /**
+   * Mirrors the legacy `data-page` attribute. An empty value marks the
+   * homepage, which uses the slideshow rather than a static background.
+   */
+  page?: string;
+  /** Legacy `html id`, still used to scope page-specific styles. */
+  pageId?: string;
+  ogImage?: string;
+}
+
+const { title, description, page = '', pageId, ogImage } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const socialImage = new URL(ogImage ?? '/images/bg-01.jpg', Astro.site).href;
+
+/*
+ * Inner pages sit on a photographic background, picked at random and kept for
+ * 24 hours — the one bit of www/js/master.js worth carrying over. It runs
+ * inline, before paint, so the background does not flash in after the page.
+ *
+ * The original built five vendor-prefixed gradient declarations by string
+ * concatenation and injected a whole <style> tag; this sets one custom
+ * property. Note bg-02 is deliberately absent, as it was in 2014.
+ *
+ * Kept as a string rather than inline markup so the whole file stays
+ * parseable by Prettier.
+ */
+const backgroundScript = `
+(() => {
+  if (!document.documentElement.dataset.page) return;
+
+  const BACKGROUNDS = ['bg-01.jpg','bg-03.jpg','bg-04.jpg','bg-05.jpg','bg-06.jpg','bg-07.jpg','bg-08.jpg','bg-09.jpg'];
+  const DAY = 86400000;
+  let chosen;
+
+  try {
+    const stored = localStorage.getItem('background');
+    const storedAt = Number(localStorage.getItem('backgroundDate'));
+    if (stored && BACKGROUNDS.includes(stored) && Date.now() - storedAt < DAY) chosen = stored;
+  } catch (e) {
+    /* Private browsing — fall through to a fresh pick. */
+  }
+
+  if (!chosen) {
+    chosen = BACKGROUNDS[Math.floor(Math.random() * BACKGROUNDS.length)];
+    try {
+      localStorage.setItem('background', chosen);
+      localStorage.setItem('backgroundDate', String(Date.now()));
+    } catch (e) {
+      /* Not persisting is fine; it just re-rolls next load. */
+    }
+  }
+
+  document.documentElement.style.setProperty('--page-background', "url('/images/" + chosen + "')");
+})();
+`;
+---
+
+<!doctype html>
+<html lang="en" id={pageId} data-page={page}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192" />
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta name="msapplication-TileColor" content="#191919" />
+    <meta name="application-name" content="Rich King" />
+    <meta name="theme-color" content="#000000" />
+
+    <link
+      rel="preload"
+      href="/fonts/cantarell-bold-webfont.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/aftaserifthin-regular-webfont.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <slot name="head" />
+  </head>
+
+  <body>
+    <slot />
+    <SideNav />
+
+    <script is:inline set:html={backgroundScript} />
+  </body>
+</html>

@@ -1,0 +1,96 @@
+---
+/**
+ * The fixed hamburger in the top-left that slides a page list out on hover.
+ * Ported from the `#sidenav` block repeated verbatim across every 2014 page.
+ */
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/photo', label: 'Photo' },
+  { href: '/video', label: 'Video' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<nav id="sidenav" aria-label="Site">
+  <div id="lineIcon">
+    <span class="navLine"></span>
+    <span class="navLine"></span>
+    <span class="navLine"></span>
+
+    <div id="pageList">
+      <ul>
+        {
+          links.map(({ href, label }) => (
+            <li>
+              <a href={href} aria-current={current === href ? 'page' : undefined}>
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<style>
+  /*
+   * The original markup nested <li> inside <a>, which is invalid; this inverts
+   * it. The padding therefore moves from the li to the anchor so the whole row
+   * stays clickable and the hover highlight still fills the strip.
+   */
+  #pageList ul li {
+    padding: 0;
+  }
+
+  #pageList ul li a {
+    display: block;
+    padding: 2vh 3vh 2vh 12vh;
+  }
+
+  #pageList ul li a:hover {
+    background: var(--paper-raised);
+    color: var(--ink);
+  }
+
+  #pageList ul li a[aria-current='page'] {
+    font-style: italic;
+  }
+
+  /* On touch there is no hover, so keep the list reachable by tap. */
+  @media (hover: none) {
+    #lineIcon {
+      padding: 3vh;
+      width: 6vw;
+      min-width: 28px;
+    }
+
+    #pageList {
+      transition: transform var(--transition);
+    }
+
+    #lineIcon[data-open='true'] > #pageList {
+      transform: translate(var(--nav-width), 0);
+    }
+  }
+</style>
+
+<script>
+  // Hover opens the panel on pointer devices (pure CSS). On touch, tapping the
+  // icon toggles it — without this the page list is unreachable on a phone,
+  // which the 2014 site solved by shipping an entirely separate mobile site.
+  const icon = document.getElementById('lineIcon');
+
+  if (icon && window.matchMedia('(hover: none)').matches) {
+    icon.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('#pageList')) return;
+      icon.dataset.open = icon.dataset.open === 'true' ? 'false' : 'true';
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!icon.contains(event.target as Node)) icon.dataset.open = 'false';
+    });
+  }
+</script>

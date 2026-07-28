@@ -1,0 +1,60 @@
+---
+import type { PhotoExif } from '../loaders/albums';
+import { formatExifParts } from '../utils/exif-format';
+
+interface Props {
+  exif: PhotoExif;
+}
+
+const { exif } = Astro.props;
+const parts = formatExifParts(exif);
+---
+
+{
+  parts.length > 0 && (
+    <figcaption class="photo-meta">
+      {parts.map((part) => (
+        <span class="photo-meta__part">{part}</span>
+      ))}
+    </figcaption>
+  )
+}
+
+<style>
+  /*
+   * Capture settings, read from each photo's EXIF at build time. Set in
+   * Cantarell at the same weight as the rest of the site's small UI text so it
+   * reads as a caption rather than a label.
+   */
+  .photo-meta {
+    font-family: var(--font-ui);
+    font-size: 1.5vh;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    white-space: nowrap;
+    display: flex;
+    gap: 1.2vh;
+    margin-top: 1.2vh;
+  }
+
+  .photo-meta__part + .photo-meta__part::before {
+    content: '·';
+    margin-right: 1.2vh;
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  @media (max-width: 48rem) {
+    .photo-meta {
+      font-size: 12px;
+      gap: 8px;
+      margin-top: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      white-space: normal;
+    }
+
+    .photo-meta__part + .photo-meta__part::before {
+      margin-right: 8px;
+    }
+  }
+</style>

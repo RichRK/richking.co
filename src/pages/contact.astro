@@ -1,0 +1,173 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+---
+
+<BaseLayout
+  title="Rich King | Contact"
+  description="Get in touch with Rich King about photography and videography work."
+  page="contact"
+  pageId="contact"
+>
+  <Header section="Contact" sectionHref="/contact" width="67.5vh" />
+
+  <main id="wrapper">
+    {
+      /*
+       * NOTE: this form has no working backend.
+       *
+       * It posted to Netlify Forms until March 2026, when the move to
+       * Statichost stripped the `data-netlify` attribute and the honeypot
+       * (commit 9f4eccf) and left it posting to /thanks — a static page. The
+       * markup is ported as-is, still non-functional, pending a decision on a
+       * form service. Until then the mailto link below is the route that works.
+       */
+    }
+    <form name="contact" action="/thanks" method="POST">
+      <label for="your_name">Name</label>
+      <input id="your_name" name="your_name" type="text" spellcheck="false" autocomplete="name" />
+
+      <label for="your_email">Email</label>
+      <input
+        id="your_email"
+        name="your_email"
+        type="email"
+        spellcheck="false"
+        autocomplete="email"
+      />
+
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="6"></textarea>
+
+      <button type="submit" class="send">
+        <span>Send</span>
+        <img src="/images/arrow.png" alt="" width="44" height="75" />
+      </button>
+    </form>
+  </main>
+
+  <nav id="nav" aria-label="Sections">
+    <ul>
+      <li><a href="/photo">Photo</a></li>
+      <li><a href="/video">Video</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+  </nav>
+</BaseLayout>
+
+<style>
+  form {
+    position: relative;
+    width: min(600px, 90vw);
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  label {
+    position: relative;
+    z-index: 50;
+    display: inline-block;
+    padding: 0.7vh 2vh;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-ui);
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  input[type='text'],
+  input[type='email'],
+  textarea {
+    position: relative;
+    top: -0.5vh;
+    width: 100%;
+    border: 1px solid transparent;
+    padding: 2.7vh 12px 1.7vh;
+    background: rgba(255, 255, 255, 0.75);
+    margin: 0 auto 5vh;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    color: var(--paper);
+    display: block;
+    text-align: center;
+    outline: none;
+    transition: background 0.2s ease;
+  }
+
+  input:focus,
+  textarea:focus {
+    background: var(--ink);
+  }
+
+  textarea {
+    resize: vertical;
+    text-align: left;
+    line-height: 1.5;
+  }
+
+  .send {
+    display: inline-flex;
+    align-items: center;
+    gap: 2vh;
+    border: 1px solid var(--hairline);
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--paper);
+    font-family: var(--font-ui);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 2vh;
+    padding: 2vh 5vh;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .send img {
+    width: 2.2vh;
+    height: auto;
+  }
+
+  .send:hover {
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  @media (max-width: 48rem) {
+    input[type='text'],
+    input[type='email'],
+    textarea {
+      margin-bottom: 24px;
+      padding: 18px 12px 14px;
+    }
+
+    .send {
+      font-size: 15px;
+      padding: 14px 32px;
+    }
+  }
+</style>
+
+<style is:global>
+  html[id='contact'] #nav {
+    position: fixed;
+    bottom: 0;
+  }
+
+  @media (max-width: 48rem) {
+    html[id='contact'] #nav {
+      position: static;
+      margin-top: 8vw;
+      padding-bottom: 6vw;
+    }
+
+    html[id='contact'] #nav ul li {
+      display: block;
+      margin: 0 auto 12px;
+      width: 70vw;
+      font-size: 15px;
+    }
+
+    html[id='contact'] #nav ul li a {
+      padding: 14px 0;
+    }
+  }
+</style>

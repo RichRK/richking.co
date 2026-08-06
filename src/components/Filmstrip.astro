@@ -199,7 +199,16 @@ const WIDTHS = [400, 800, 1200, 1600];
     opacity: 1;
   }
 
-  /* The CSS triangle sitting on the white block. */
+  /*
+   * The mark on the white block is a chevron, not a solid triangle — and the
+   * original drew it without any chevron primitive. It stacked two identical
+   * CSS triangles, a dark one and a white "clone" offset by 1.3vh, so the
+   * clone masks the middle of the dark one and leaves an angled sliver.
+   *
+   * Reproduced here with two pseudo-elements: ::before is the dark triangle,
+   * ::after the white clone that paints over it.
+   */
+  .filmstrip__arrow-glyph::before,
   .filmstrip__arrow-glyph::after {
     content: '';
     position: absolute;
@@ -211,14 +220,24 @@ const WIDTHS = [400, 800, 1200, 1600];
     transform: translate(0, -50%);
   }
 
-  .filmstrip__arrow--prev .filmstrip__arrow-glyph::after {
-    right: 1.3vh;
+  .filmstrip__arrow--prev .filmstrip__arrow-glyph::before {
+    left: 2vh;
     border-right: 2.5vh solid var(--paper-raised);
   }
 
-  .filmstrip__arrow--next .filmstrip__arrow-glyph::after {
-    left: 1.3vh;
+  .filmstrip__arrow--prev .filmstrip__arrow-glyph::after {
+    left: 3.3vh;
+    border-right: 2.5vh solid var(--ink);
+  }
+
+  .filmstrip__arrow--next .filmstrip__arrow-glyph::before {
+    right: 2vh;
     border-left: 2.5vh solid var(--paper-raised);
+  }
+
+  .filmstrip__arrow--next .filmstrip__arrow-glyph::after {
+    right: 3.3vh;
+    border-left: 2.5vh solid var(--ink);
   }
 
   /* ----------------------------------------------------------- small screens -- */

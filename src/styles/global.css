@@ -288,6 +288,8 @@ h3 {
   top: 0;
   left: 0;
   z-index: 120;
+  /* content-box: the 2014 rule sized the 4vh bar independently of its padding. */
+  box-sizing: content-box;
   width: 4vh;
   padding: 5vh 3vh 2vh 5vh;
 }
@@ -299,6 +301,9 @@ h3 {
 }
 
 .navLine {
+  /* These are <span>s, so they need this — without it the bars collapse to
+     zero height and the hamburger disappears. */
+  display: block;
   position: relative;
   width: 100%;
   z-index: 125;

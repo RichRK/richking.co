@@ -1,7 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
-import { videos } from '../data/videos';
+import { getImage } from 'astro:assets';
+import { getCollection } from 'astro:content';
+
+const entries = (await getCollection('videos')).sort((a, b) => a.data.order - b.data.order);
+
+// Posters are CSS backgrounds, so they go through getImage() rather than <Image>.
+const videos = await Promise.all(
+  entries.map(async ({ id, data }) => ({
+    ...data,
+    id,
+    posterUrl: (await getImage({ src: data.poster, width: 800, format: 'webp' })).src,
+  })),
+);
 ---
 
 <BaseLayout
@@ -17,7 +29,7 @@ import { videos } from '../data/videos';
       {
         videos.map((video) => (
           <button type="button" class="film" data-video={video.id} data-youtube={video.youtubeId}>
-            <span class="film__poster" style={`background-image: url('${video.poster}');`}>
+            <span class="film__poster" style={`background-image: url('${video.posterUrl}');`}>
               <h3 class="film__title">{video.title}</h3>
               <span class="film__circle" aria-hidden="true" />
               <span class="film__play" aria-hidden="true" />

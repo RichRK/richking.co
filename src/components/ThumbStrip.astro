@@ -1,14 +1,12 @@
 ---
 import { Image } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
-import type { Album } from '../loaders/albums';
+import type { Album } from '../utils/albums';
 
 interface Props {
   album: Album;
-  images: Record<string, ImageMetadata>;
 }
 
-const { album, images } = Astro.props;
+const { album } = Astro.props;
 
 /*
  * The 2014 site painted this strip from www/css/thumbnails.css — 1,226 lines of
@@ -31,29 +29,24 @@ const THUMB_WIDTHS = [70, 140, 210];
   </a>
 
   {
-    album.photos.map((photo, index) => {
-      const image = images[photo.src];
-      if (!image) throw new Error(`No image module found for ${photo.src}`);
-
-      return (
-        <a href={`#photo-${index + 1}`} class="thumbstrip__item">
-          <Image
-            src={image}
-            alt=""
-            widths={THUMB_WIDTHS}
-            sizes="9vh"
-            loading="lazy"
-            decoding="async"
-            class="thumbstrip__image"
-            style={`object-position: ${photo.thumbPosition};`}
-          />
-          <span class="thumbstrip__overlay" aria-hidden="true">
-            <span class="thumbstrip__number">{index + 1}</span>
-          </span>
-          <span class="visually-hidden">Photo {index + 1}</span>
-        </a>
-      );
-    })
+    album.photos.map((photo, index) => (
+      <a href={`#photo-${index + 1}`} class="thumbstrip__item">
+        <Image
+          src={photo.src}
+          alt=""
+          widths={THUMB_WIDTHS}
+          sizes="9vh"
+          loading="lazy"
+          decoding="async"
+          class="thumbstrip__image"
+          style={`object-position: ${photo.thumbPosition};`}
+        />
+        <span class="thumbstrip__overlay" aria-hidden="true">
+          <span class="thumbstrip__number">{index + 1}</span>
+        </span>
+        <span class="visually-hidden">Photo {index + 1}</span>
+      </a>
+    ))
   }
 </nav>
 

@@ -1,9 +1,8 @@
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, relative, resolve } from 'node:path';
 import type { Loader, LoaderContext } from 'astro/loaders';
 import exifr from 'exifr';
-import sharp from 'sharp';
 import { parse as parseYaml } from 'yaml';
 
 const PHOTO_PATTERN = /\.jpe?g$/i;
@@ -33,24 +32,18 @@ export interface PhotoExif {
   capturedAt?: Date;
 }
 
-export interface Photo {
+/**
+ * What the loader hands to the collection. Image fields are relative paths —
+ * `./001.jpg` — which the schema's `image()` resolves against the entry's
+ * `filePath` into real `ImageMetadata`. The public types live in
+ * `src/utils/albums.ts`, inferred from that schema.
+ */
+interface RawPhoto {
   file: string;
   src: string;
   alt: string;
-  width: number;
-  height: number;
-  orientation: 'portrait' | 'landscape';
   thumbPosition: string;
   exif: PhotoExif;
-}
-
-export interface Album {
-  slug: string;
-  title: string;
-  description?: string;
-  order?: number;
-  cover: string;
-  photos: Photo[];
 }
 
 /** Shape of the optional `album.yaml` sidecar. Every field is optional. */
@@ -121,40 +114,28 @@ async function readExif(path: string): Promise<PhotoExif> {
 
 async function buildPhoto(
   dir: string,
-  slug: string,
   file: string,
   index: number,
   albumTitle: string,
   sidecar: AlbumSidecar,
-): Promise<Photo> {
-  const path = join(dir, file);
+): Promise<RawPhoto> {
   const overrides = sidecar.photos?.[file] ?? {};
-
-  const [metadata, exif] = await Promise.all([sharp(path).metadata(), readExif(path)]);
-
-  const width = metadata.width ?? 0;
-  const height = metadata.height ?? 0;
-  if (!width || !height) throw new Error(`Could not read dimensions of ${path}`);
 
   return {
     file,
-    // Matches the keys produced by `import.meta.glob` in the album page.
-    src: `/src/assets/photos/${slug}/${file}`,
+    src: `./${file}`,
     // Placeholder alt text. Better than a filename for a screen reader, and
     // overridable per photo in album.yaml.
     alt: overrides.alt ?? `${albumTitle} — photo ${index + 1}`,
-    width,
-    height,
-    orientation: height > width ? 'portrait' : 'landscape',
     thumbPosition: overrides.thumbPosition ?? 'center',
-    exif,
+    exif: await readExif(join(dir, file)),
   };
 }
 
 /**
  * Cheap change detection: album identity is the sorted list of filenames plus
  * each file's size and mtime. If none of that moved, the cached entry is reused
- * and no EXIF or `sharp` work happens at all.
+ * and no EXIF work happens at all.
  */
 function digestAlbum(dir: string, files: string[]): string {
   const hash = createHash('sha256');
@@ -171,7 +152,7 @@ async function loadAlbum(
   base: string,
   slug: string,
   context: LoaderContext,
-): Promise<Album | undefined> {
+): Promise<number | undefined> {
   const dir = join(base, slug);
 
   const files = readdirSync(dir)
@@ -184,28 +165,26 @@ async function loadAlbum(
   }
 
   const digest = digestAlbum(dir, files);
-  // The store is typed as a bag of unknown properties; Album is the shape we
-  // put in and take out, so the cast is confined to these two call sites.
-  const cached = context.store.get<Album & Record<string, unknown>>(slug);
+  const cached = context.store.get(slug);
   if (cached && cached.digest === digest) return undefined;
 
   const sidecar = readSidecar(dir);
   const title = sidecar.title ?? titleFromSlug(slug);
 
   const photos = await Promise.all(
-    files.map((file, index) => buildPhoto(dir, slug, file, index, title, sidecar)),
+    files.map((file, index) => buildPhoto(dir, file, index, title, sidecar)),
   );
 
   // A hand-made cover.jpg wins; otherwise fall back to the first photo so a
   // freshly dropped-in folder still gets a tile on /photo.
   const coverFile = sidecar.cover ?? (existsSync(join(dir, COVER_FILE)) ? COVER_FILE : files[0]!);
 
-  const album: Album = {
+  const album = {
     slug,
     title,
     description: sidecar.description,
     order: sidecar.order,
-    cover: `/src/assets/photos/${slug}/${coverFile}`,
+    cover: `./${coverFile}`,
     photos,
   };
 
@@ -215,18 +194,21 @@ async function loadAlbum(
    * is a number, an order that is a string) would sail through and surface as
    * a broken page instead of a build error.
    */
-  const data = await context.parseData({
-    id: slug,
-    data: album as unknown as Record<string, unknown>,
-  });
+  /*
+   * `filePath` is what lets the schema's `image()` turn `./001.jpg` into
+   * ImageMetadata: relative paths resolve against it. The sidecar may not
+   * exist, but its path is still the right anchor for the folder.
+   */
+  const filePath = relative(process.cwd(), join(dir, 'album.yaml')).replaceAll('\\', '/');
+  const data = await context.parseData({ id: slug, data: album, filePath });
 
-  context.store.set({ id: slug, data, digest });
-  return album;
+  context.store.set({ id: slug, data, digest, filePath });
+  return photos.length;
 }
 
 /**
  * Scans a directory of album folders and turns each one into a content entry,
- * harvesting EXIF and image dimensions from the source files.
+ * harvesting EXIF from the source files.
  *
  * Everything is derived from the filesystem, so adding an album means dropping a
  * folder of JPEGs into `src/assets/photos/` — no code change, no route to
@@ -260,10 +242,10 @@ export function albumLoader({ base }: { base: string }): Loader {
       let photos = 0;
 
       for (const slug of slugs) {
-        const album = await loadAlbum(root, slug, context);
-        if (album) {
+        const count = await loadAlbum(root, slug, context);
+        if (count !== undefined) {
           loaded++;
-          photos += album.photos.length;
+          photos += count;
         }
       }
 

@@ -56,14 +56,16 @@ Scaffolds an `album.yaml` for an existing folder.
 
 ## How it fits together
 
-| Piece                             | Role                                                                      |
-| --------------------------------- | ------------------------------------------------------------------------- |
-| `src/loaders/albums.ts`           | Scans `src/assets/photos/`, reads EXIF (`exifr`) and dimensions (`sharp`) |
-| `src/content.config.ts`           | Zod schema for the `albums` collection                                    |
-| `src/components/Filmstrip.astro`  | The horizontal gallery — CSS scroll-snap, vertical stack on small screens |
-| `src/components/ThumbStrip.astro` | Thumbnail strip along the bottom                                          |
-| `src/components/PhotoMeta.astro`  | The `1/500s · f/2.8 · ISO 100 · 40mm` caption                             |
-| `src/utils/gallery.ts`            | Arrow keys, prev/next, current-photo tracking                             |
+| Piece                                 | Role                                                                      |
+| ------------------------------------- | ------------------------------------------------------------------------- |
+| `src/loaders/albums.ts`               | Scans `src/assets/photos/` and reads each photo's EXIF (`exifr`)          |
+| `src/content.config.ts`               | Zod schemas for the `albums` and `videos` collections                     |
+| `src/content/videos/`                 | One YAML file per film, with its poster image alongside                   |
+| `src/integrations/prune-originals.ts` | Drops unreferenced full-size JPEGs that `image()` leaves in `dist/`       |
+| `src/components/Filmstrip.astro`      | The horizontal gallery — CSS scroll-snap, vertical stack on small screens |
+| `src/components/ThumbStrip.astro`     | Thumbnail strip along the bottom                                          |
+| `src/components/PhotoMeta.astro`      | The `1/500s · f/2.8 · ISO 100 · 40mm` caption                             |
+| `src/utils/gallery.ts`                | Arrow keys, prev/next, current-photo tracking                             |
 
 EXIF is harvested **at build time, from the source files**. Astro's image
 pipeline re-encodes photos and strips their metadata, so it has to be captured

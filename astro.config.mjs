@@ -1,11 +1,12 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import pruneOriginals from './src/integrations/prune-originals.ts';
 
 export default defineConfig({
   site: 'https://richking.co',
   trailingSlash: 'never',
-  integrations: [sitemap()],
+  integrations: [sitemap(), pruneOriginals()],
   build: {
     format: 'file',
   },

@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import AlbumTile from '../../components/AlbumTile.astro';
+import { getAlbums } from '../../utils/albums';
+
+const albums = await getAlbums();
+---
+
+<BaseLayout
+  title="Rich King | Photo"
+  description="Photography by Rich King — albums from Nicaragua, Panama, Costa Rica and the UK."
+  page="photo"
+  pageId="photo"
+>
+  <Header section="Photo" sectionHref="/photo" />
+
+  <main id="wrapper">
+    <div id="secondaryWrapper">
+      {
+        albums.map((album) => (
+          <AlbumTile
+            href={`/photo/${album.slug}`}
+            title={album.title}
+            count={album.photos.length}
+            cover={album.cover}
+          />
+        ))
+      }
+    </div>
+  </main>
+</BaseLayout>
+
+<style is:global>
+  html[id='photo'] #header {
+    margin-bottom: 7vh;
+  }
+
+  html[id='photo'] #secondaryWrapper {
+    padding: 0 0 8vh;
+  }
+
+  @media (max-width: 48rem) {
+    html[id='photo'] #secondaryWrapper {
+      padding: 0 0 12vw;
+    }
+  }
+</style>

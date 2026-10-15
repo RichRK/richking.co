@@ -1,0 +1,160 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  href: string;
+  title: string;
+  count: number;
+  cover: ImageMetadata;
+}
+
+const { href, title, count, cover } = Astro.props;
+---
+
+<a href={href} class="album">
+  <span class="album__disc">
+    <Image
+      src={cover}
+      alt=""
+      widths={[300, 600, 900]}
+      sizes="(max-width: 48rem) 74vw, 37vw"
+      loading="lazy"
+      decoding="async"
+      class="album__image"
+    />
+  </span>
+
+  <span class="album__title"><h3>{title}</h3></span>
+  <span class="album__count">
+    <h4>{count} {count === 1 ? 'photo' : 'photos'}</h4>
+  </span>
+</a>
+
+<style>
+  .album {
+    position: relative;
+    display: inline-block;
+    /* content-box on purpose: the 0.8vh border sits outside the 37% width. */
+    box-sizing: content-box;
+    width: 37%;
+    margin: 0 3% 5%;
+    border: 0.8vh solid rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    vertical-align: top;
+  }
+
+  .album__disc {
+    display: block;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  /*
+   * Blur the image, not the clipping circle: blurring the clip softens it and
+   * haloes the rim. The image is oversized slightly so its blurred edge stays
+   * under the border.
+   */
+  .album__image {
+    width: 100.5%;
+    height: 100.5%;
+    margin: -0.25%;
+    object-fit: cover;
+    display: block;
+    transition: filter 0.2s ease-out;
+  }
+
+  .album:hover .album__image,
+  .album:focus-visible .album__image {
+    filter: blur(5px);
+  }
+
+  .album__title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 13.3%;
+    text-align: center;
+    z-index: 100;
+  }
+
+  .album__title h3 {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.4);
+    padding: 0.65vw 1.3vw;
+    color: var(--paper);
+    font-size: 1.4vw;
+    font-weight: bold;
+    font-family: var(--font-ui);
+    line-height: 1;
+    transition: transform 0.2s ease;
+  }
+
+  /* -450% of the label's own height lands the title at the circle's centre. */
+  .album:hover .album__title h3,
+  .album:focus-visible .album__title h3 {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-450%) scale(1.5);
+  }
+
+  .album__count {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 1.84%;
+    text-align: center;
+    opacity: 0;
+    z-index: 100;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .album__count h4 {
+    display: inline-block;
+    font-family: var(--font-display);
+    background: rgba(0, 0, 0, 0.9);
+    color: #999;
+    font-size: 2vh;
+    line-height: 1;
+    padding: 0.8vh 1vh;
+    font-style: italic;
+  }
+
+  .album:hover .album__count,
+  .album:focus-visible .album__count {
+    opacity: 1;
+    transform: translateY(-13vw);
+  }
+
+  @media (max-width: 48rem) {
+    .album {
+      width: 74%;
+      margin: 0 auto 8%;
+      display: block;
+    }
+
+    .album__title h3 {
+      font-size: 15px;
+      padding: 6px 12px;
+    }
+
+    .album__count {
+      opacity: 1;
+    }
+
+    .album__count h4 {
+      font-size: 12px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .album__image,
+    .album__title h3,
+    .album__count {
+      transition: none;
+    }
+  }
+</style>

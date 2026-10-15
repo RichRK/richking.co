@@ -1,0 +1,78 @@
+---
+interface Props {
+  section: string;
+  sectionHref: string;
+  /** Fixed vh width so the wordmark and section block sit centred as a pair. */
+  width?: string;
+  /** The gallery pins the header over the filmstrip. */
+  fixed?: boolean;
+}
+
+const { section, sectionHref, width = '62vh', fixed = false } = Astro.props;
+---
+
+<header id="header" class:list={['site-header', { 'site-header--fixed': fixed }]}>
+  <a href="/"><h1>Rich King</h1></a>
+  <h2><a href={sectionHref}>{section}</a></h2>
+</header>
+
+<style define:vars={{ headerWidth: width }}>
+  .site-header {
+    width: var(--headerWidth);
+    position: relative;
+    left: 0;
+    right: 0;
+    margin: 5vh auto;
+  }
+
+  .site-header--fixed {
+    position: fixed;
+  }
+
+  .site-header h1 {
+    font-family: var(--font-ui);
+    font-weight: bold;
+    font-size: 6.4vh;
+    color: var(--ink);
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+    text-transform: uppercase;
+    float: left;
+    line-height: 0.75;
+  }
+
+  .site-header h2 {
+    font-size: 4.2vh;
+    font-weight: bold;
+    background: var(--ink);
+    display: inline-block;
+    margin-left: 2.2vh;
+    color: var(--paper);
+    line-height: 1;
+  }
+
+  .site-header h2 a {
+    color: var(--paper);
+  }
+
+  @media (max-width: 48rem) {
+    .site-header,
+    .site-header--fixed {
+      position: static;
+      width: auto;
+      margin: 6vw 5vw 4vw;
+      text-align: center;
+    }
+
+    .site-header h1 {
+      float: none;
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .site-header h2 {
+      font-size: 18px;
+      margin-left: 0;
+      margin-top: 8px;
+    }
+  }
+</style>

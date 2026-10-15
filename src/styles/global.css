@@ -1,0 +1,360 @@
+/* Layout is deliberately driven by vh/vw units: proportional scaling gives the site its look. */
+
+/* ---------------------------------------------------------------- tokens -- */
+
+:root {
+  --ink: #fff;
+  --ink-muted: rgba(255, 255, 255, 0.6);
+  --paper: #000;
+  --paper-raised: #222;
+  --surface: rgba(255, 255, 255, 0.95);
+  --hairline: rgba(255, 255, 255, 0.1);
+
+  --font-display: 'Afta Serif', Georgia, serif;
+  --font-ui: 'Cantarell', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  --nav-width: 35vh;
+  --transition: 0.2s ease;
+
+  --page-background: url('/images/bg-01.jpg');
+  --background-scrim: rgba(0, 0, 0, 0.7);
+
+  /* Photos are a little shorter than 75vh to leave room for the EXIF caption. */
+  --gallery-photo-height: 72vh;
+}
+
+/* ----------------------------------------------------------------- reset -- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+img,
+ul,
+li,
+form,
+label,
+figure,
+figcaption,
+button,
+input,
+textarea,
+iframe,
+dialog {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+button {
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* ----------------------------------------------------------------- fonts -- */
+
+@font-face {
+  font-family: 'Afta Serif';
+  src:
+    url('/fonts/aftaserifthin-regular-webfont.woff2') format('woff2'),
+    url('/fonts/aftaserifthin-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Afta Serif';
+  src:
+    url('/fonts/aftaserifthin-italic-webfont.woff2') format('woff2'),
+    url('/fonts/aftaserifthin-italic-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cantarell';
+  src:
+    url('/fonts/cantarell-regular-webfont.woff2') format('woff2'),
+    url('/fonts/cantarell-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cantarell';
+  src:
+    url('/fonts/cantarell-bold-webfont.woff2') format('woff2'),
+    url('/fonts/cantarell-bold-webfont.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------------ main -- */
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+html {
+  background: var(--paper);
+  font-family: var(--font-display);
+  color: var(--ink);
+  -webkit-text-size-adjust: 100%;
+}
+
+/*
+ * On the root, not on body: an in-flow header's top margin collapses through
+ * body and shifts its box down, and a background on body would then leave a
+ * strip of html's own colour above it.
+ */
+html[data-page]:not([data-page='']) {
+  background:
+    linear-gradient(to bottom, var(--background-scrim) 0%, var(--background-scrim) 100%) fixed,
+    var(--page-background) no-repeat center bottom fixed var(--paper);
+  background-size: cover;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+}
+
+a {
+  text-decoration: none;
+  color: var(--ink);
+}
+
+h1 {
+  color: var(--ink);
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+h2 {
+  color: var(--ink);
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+h3 {
+  color: var(--ink);
+  font-size: 32px;
+  text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------------- header -- */
+
+/*
+ * Positioning is left to Header.astro, which sets `relative` or `fixed` per
+ * page. Declaring `position` here as well would win on specificity (#id beats
+ * a class) and silently pin the gallery header back into the document flow.
+ */
+#header {
+  z-index: 50;
+}
+
+#header h2 {
+  border: 0.3vh solid transparent;
+  position: relative;
+  top: -0.35vh;
+  padding: 0.7vh 1.2vh 0.9vh;
+}
+
+#header h2:hover {
+  background: transparent;
+  border: 0.3vh solid var(--ink);
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------------- nav -- */
+
+#nav {
+  width: 100%;
+  background: transparent;
+  margin: 0 auto;
+  position: relative;
+}
+
+#nav ul {
+  text-align: center;
+}
+
+#nav ul li {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 2.5vh;
+  background: var(--surface);
+  margin-bottom: 4vw;
+  margin-right: 5vh;
+  border: 1px solid transparent;
+}
+
+#nav ul li:last-child {
+  margin-right: 0;
+}
+
+#nav ul li:hover {
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+}
+
+#nav ul li:hover > a {
+  color: var(--ink);
+}
+
+#nav ul li a {
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  color: var(--paper);
+  display: block;
+  padding: 3vh 8vh;
+}
+
+#nav ul li a:active {
+  color: var(--paper);
+  background: var(--ink);
+  text-shadow: none;
+}
+
+/* -------------------------------------------------------------- wrappers -- */
+
+#wrapper {
+  min-height: 100%;
+  width: 100%;
+}
+
+#secondaryWrapper {
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+
+/* ------------------------------------------------- slide-out page list -- */
+
+#lineIcon {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 120;
+  /* content-box: the 4vh bar is sized independently of its padding. */
+  box-sizing: content-box;
+  width: 4vh;
+  padding: 5vh 3vh 2vh 5vh;
+}
+
+#lineIcon:hover > #pageList,
+#lineIcon:focus-within > #pageList {
+  transform: translate(var(--nav-width), 0);
+  transition: transform var(--transition);
+}
+
+.navLine {
+  /* These are <span>s, so they need this — without it the bars collapse to
+     zero height and the hamburger disappears. */
+  display: block;
+  position: relative;
+  width: 100%;
+  z-index: 125;
+  height: 0.5vh;
+  background: var(--ink);
+  margin-bottom: 1vh;
+}
+
+#pageList {
+  position: fixed;
+  top: 4vh;
+  left: calc(var(--nav-width) * -1);
+  z-index: 130;
+  background: var(--ink);
+  font-family: var(--font-ui);
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: right;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+  transition: transform var(--transition);
+}
+
+#pageList a {
+  color: var(--paper);
+}
+
+#pageList a:hover {
+  color: var(--ink);
+}
+
+#pageList a:hover > li {
+  background: var(--paper-raised);
+}
+
+#pageList ul li {
+  padding: 2vh 3vh 2vh 12vh;
+}
+
+/* --------------------------------------------------------- accessibility -- */
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+    scroll-behavior: auto;
+  }
+}

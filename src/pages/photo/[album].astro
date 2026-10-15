@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Filmstrip from '../../components/Filmstrip.astro';
+import ThumbStrip from '../../components/ThumbStrip.astro';
+import type { Album } from '../../utils/albums';
+
+export async function getStaticPaths() {
+  const albums = await getCollection('albums');
+
+  return albums.map((entry) => ({
+    params: { album: entry.data.slug },
+    props: { album: entry.data },
+  }));
+}
+
+interface Props {
+  album: Album;
+}
+
+const { album } = Astro.props;
+
+const description = album.description ?? `Photographs from ${album.title} by Rich King.`;
+---
+
+<BaseLayout
+  title={`Rich King | ${album.title}`}
+  description={description}
+  page={album.slug}
+  pageId="subphoto"
+>
+  <Header section="Photo" sectionHref="/photo" fixed />
+  <ThumbStrip album={album} />
+  <Filmstrip album={album} />
+</BaseLayout>
+
+<style is:global>
+  /* The filmstrip owns the viewport; the page itself must not scroll. */
+  html[id='subphoto'],
+  html[id='subphoto'] body {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  @media (max-width: 48rem) {
+    html[id='subphoto'],
+    html[id='subphoto'] body {
+      overflow: visible;
+      height: auto;
+    }
+  }
+</style>

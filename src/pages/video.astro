@@ -1,0 +1,359 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import { getImage } from 'astro:assets';
+import { getCollection } from 'astro:content';
+
+const entries = (await getCollection('videos')).sort((a, b) => a.data.order - b.data.order);
+
+// Posters are CSS backgrounds, so they go through getImage() rather than <Image>.
+const videos = await Promise.all(
+  entries.map(async ({ id, data }) => ({
+    ...data,
+    id,
+    posterUrl: (await getImage({ src: data.poster, width: 800, format: 'webp' })).src,
+  })),
+);
+---
+
+<BaseLayout
+  title="Rich King | Video"
+  description="Short films and documentary work by Rich King, shot in Costa Rica, Nicaragua and Panama."
+  page="video"
+  pageId="video"
+>
+  <Header section="Video" sectionHref="/video" width="59.75vh" />
+
+  <main id="wrapper">
+    <div id="secondaryWrapper">
+      {
+        videos.map((video) => (
+          <button type="button" class="film" data-video={video.id} data-youtube={video.youtubeId}>
+            <span class="film__poster" style={`background-image: url('${video.posterUrl}');`}>
+              <h3 class="film__title">{video.title}</h3>
+              <span class="film__circle" aria-hidden="true" />
+              <span class="film__play" aria-hidden="true" />
+              <span class="film__duration">{video.duration}</span>
+            </span>
+          </button>
+        ))
+      }
+    </div>
+  </main>
+
+  {
+    videos.map((video) => (
+      <dialog class="film-dialog" id={`dialog-${video.id}`} aria-label={video.title}>
+        <div class="film-dialog__inner">
+          <h3>{video.title}</h3>
+          <button type="button" class="film-dialog__close" data-close>
+            <span class="visually-hidden">Close</span>
+            <span aria-hidden="true">×</span>
+          </button>
+
+          <div class="film-dialog__frame">
+            {/* src is set on open and cleared on close, so nothing from
+                YouTube loads until the film is actually played. */}
+            <iframe
+              title={video.title}
+              data-src={`https://www.youtube-nocookie.com/embed/${video.youtubeId}?rel=0&modestbranding=1&autoplay=1`}
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+            />
+          </div>
+
+          <p>{video.description}</p>
+          <h4>( {video.maxQuality} available )</h4>
+        </div>
+      </dialog>
+    ))
+  }
+</BaseLayout>
+
+<style>
+  /*
+   * At rest: a white title band across the middle with a grey duration chip
+   * beneath. On hover the band slides to the top, the play circle fades in and
+   * the chip drops to the bottom.
+   */
+  .film {
+    display: inline-block;
+    width: 40%;
+    margin: 0 2.25% 4%;
+    padding: 0;
+    border: 0;
+    vertical-align: top;
+  }
+
+  .film__poster {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    /* Flat 20% black wash over every poster. */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .film__title {
+    position: relative;
+    z-index: 2;
+    font-size: 2vw;
+    font-family: var(--font-ui);
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2% 0;
+    color: var(--paper);
+    line-height: 1;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+  }
+
+  .film:hover .film__title,
+  .film:focus-visible .film__title {
+    transform: translateY(-8vw);
+  }
+
+  .film__duration {
+    display: block;
+    position: absolute;
+    z-index: 2;
+    font-family: var(--font-ui);
+    font-size: 1vw;
+    width: 9.5%;
+    left: 50%;
+    margin-left: -4.75%;
+    bottom: 36.25%;
+    padding: 0.8% 0;
+    color: rgba(0, 0, 0, 0.8);
+    background: rgb(200, 200, 200);
+    line-height: 1;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+  }
+
+  .film:hover .film__duration,
+  .film:focus-visible .film__duration {
+    transform: translateY(6vw);
+  }
+
+  /* Hidden until hover. */
+  .film__circle,
+  .film__play {
+    display: none;
+    position: absolute;
+    z-index: 2;
+  }
+
+  .film__circle {
+    /* content-box so the 3px ring sits outside the 10% width. */
+    box-sizing: content-box;
+    width: 10%;
+    height: 0;
+    padding-bottom: 10%;
+    border-radius: 50%;
+    border: 3px solid var(--ink);
+    background: rgba(255, 255, 255, 0.1);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -25%);
+  }
+
+  .film__play {
+    width: 0;
+    height: 0;
+    border-left: 1.8vw solid rgba(255, 255, 255, 0.9);
+    border-top: 1.1vw solid transparent;
+    border-bottom: 1.1vw solid transparent;
+    filter: drop-shadow(0 0 9px rgba(0, 0, 0, 1));
+    top: 50%;
+    left: 50.65%;
+    transform: translate(-50%, 0);
+  }
+
+  .film:hover .film__circle,
+  .film:focus-visible .film__circle,
+  .film:hover .film__play,
+  .film:focus-visible .film__play {
+    display: block;
+  }
+
+  /* ---------------------------------------------------------------- dialog -- */
+
+  .film-dialog {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    max-width: 90vw;
+    max-height: 92vh;
+    color: var(--ink);
+  }
+
+  .film-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.85);
+  }
+
+  .film-dialog__inner {
+    position: relative;
+    width: min(80vw, 1100px);
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    padding: 3vh 3vh 4vh;
+  }
+
+  .film-dialog__inner h3 {
+    font-family: var(--font-display);
+    font-size: 3vh;
+    text-transform: none;
+    margin-bottom: 2vh;
+  }
+
+  .film-dialog__close {
+    position: absolute;
+    top: 2vh;
+    right: 2.5vh;
+    font-family: var(--font-ui);
+    font-size: 3vh;
+    line-height: 1;
+    border: 0;
+  }
+
+  .film-dialog__frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: #000;
+  }
+
+  .film-dialog__frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .film-dialog__inner p {
+    font-family: var(--font-display);
+    font-size: 2vh;
+    line-height: 1.5;
+    margin-top: 2.5vh;
+  }
+
+  .film-dialog__inner h4 {
+    font-family: var(--font-ui);
+    font-size: 1.4vh;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-top: 1.5vh;
+  }
+
+  @media (max-width: 48rem) {
+    .film {
+      display: block;
+      width: 90vw;
+      margin: 0 auto 5vw;
+    }
+
+    /* No hover on touch, so the play affordance has to be permanent. */
+    .film__circle,
+    .film__play {
+      display: block;
+    }
+
+    .film__title {
+      font-size: 20px;
+      /* Keeps the band clear of the play circle sitting in the middle. */
+      transform: translateY(-90%);
+    }
+
+    .film__duration {
+      font-size: 11px;
+      width: 64px;
+      margin-left: -32px;
+      bottom: 8%;
+      padding: 4px 0;
+      transform: none;
+    }
+
+    .film__play {
+      border-left-width: 20px;
+      border-top-width: 12px;
+      border-bottom-width: 12px;
+    }
+
+    .film-dialog__inner {
+      width: 92vw;
+      padding: 16px 16px 24px;
+    }
+
+    .film-dialog__inner h3 {
+      font-size: 20px;
+    }
+
+    .film-dialog__inner p {
+      font-size: 14px;
+    }
+  }
+</style>
+
+<style is:global>
+  /* The video page gave its header a little more room beneath. */
+  html[id='video'] #header {
+    margin-bottom: 6.25vh;
+  }
+
+  html[id='video'] #secondaryWrapper {
+    /* No horizontal padding — the tiles' own 2.25% margins set the gutter. */
+    padding: 0 0 8vh;
+    font-size: 0;
+  }
+
+  @media (max-width: 48rem) {
+    /* The video page gave its header a little more room beneath. */
+    html[id='video'] #header {
+      margin-bottom: 6.25vh;
+    }
+
+    html[id='video'] #secondaryWrapper {
+      padding: 0 0 10vw;
+    }
+  }
+</style>
+
+<script>
+  for (const trigger of document.querySelectorAll<HTMLButtonElement>('.film')) {
+    trigger.addEventListener('click', () => {
+      const dialog = document.getElementById(`dialog-${trigger.dataset.video}`);
+      if (!(dialog instanceof HTMLDialogElement)) return;
+
+      // Setting src here means no YouTube request is made — and no cookie set —
+      // until someone actually opens a film.
+      const iframe = dialog.querySelector('iframe');
+      if (iframe && iframe.dataset.src) iframe.src = iframe.dataset.src;
+
+      dialog.showModal();
+    });
+  }
+
+  for (const dialog of document.querySelectorAll<HTMLDialogElement>('.film-dialog')) {
+    const stop = () => {
+      // Clearing src unloads the player, which stops playback.
+      const iframe = dialog.querySelector('iframe');
+      if (iframe) iframe.removeAttribute('src');
+    };
+
+    dialog.addEventListener('close', stop);
+    dialog.querySelector('[data-close]')?.addEventListener('click', () => dialog.close());
+
+    // Clicking the backdrop closes.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  }
+</script>

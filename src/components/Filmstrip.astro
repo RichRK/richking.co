@@ -1,0 +1,275 @@
+---
+import { Image } from 'astro:assets';
+import { orientationOf, type Album } from '../utils/albums';
+import PhotoMeta from './PhotoMeta.astro';
+
+interface Props {
+  album: Album;
+}
+
+const { album } = Astro.props;
+
+// Photos are ~75vh tall, so the widest they get is roughly 1.5x the viewport
+// height. These cover retina phones through to a large desktop.
+const WIDTHS = [400, 800, 1200, 1600];
+---
+
+<div id="wrapper" class="filmstrip" tabindex="-1">
+  <section class="filmstrip__intro" id="photo-0" aria-labelledby="album-title">
+    <div class="filmstrip__intro-card">
+      <h3 id="album-title">{album.title}</h3>
+      {album.description && <p>{album.description}</p>}
+    </div>
+  </section>
+
+  {
+    album.photos.map((photo, index) => (
+      <figure class="filmstrip__slide" id={`photo-${index + 1}`} data-index={index + 1}>
+        <Image
+          src={photo.src}
+          alt={photo.alt}
+          widths={WIDTHS}
+          sizes="(max-width: 48rem) 100vw, 110vh"
+          loading={index < 2 ? 'eager' : 'lazy'}
+          fetchpriority={index === 0 ? 'high' : undefined}
+          decoding={index < 2 ? 'sync' : 'async'}
+          class={`filmstrip__photo filmstrip__photo--${orientationOf(photo)}`}
+        />
+        <PhotoMeta exif={photo.exif} />
+      </figure>
+    ))
+  }
+</div>
+
+<div class="filmstrip__arrows">
+  <button type="button" class="filmstrip__arrow filmstrip__arrow--prev" data-step="-1" hidden>
+    <span class="visually-hidden">Previous photo</span>
+    <span class="filmstrip__arrow-glyph" aria-hidden="true"></span>
+  </button>
+  <button type="button" class="filmstrip__arrow filmstrip__arrow--next" data-step="1">
+    <span class="visually-hidden">Next photo</span>
+    <span class="filmstrip__arrow-glyph" aria-hidden="true"></span>
+  </button>
+</div>
+
+<style>
+  /*
+   * Each slide is a full viewport wide with the photo centred inside it, so
+   * scroll-snap can centre photos without knowing their aspect ratio up front.
+   */
+  .filmstrip {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+
+  .filmstrip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filmstrip__intro,
+  .filmstrip__slide {
+    flex: 0 0 100vw;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+
+  .filmstrip__intro-card {
+    background: var(--surface);
+    /* 35vw of content plus 2.5vw of padding either side. */
+    width: 40vw;
+    min-height: 35vh;
+    padding: 4vh 2.5vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 2vh;
+  }
+
+  .filmstrip__intro-card h3 {
+    font-family: var(--font-display);
+    font-size: 4.1vh;
+    text-transform: none;
+    color: var(--paper);
+    margin: 0 auto 4vh;
+    text-align: center;
+  }
+
+  .filmstrip__intro-card p {
+    font-family: var(--font-display);
+    font-size: 2vh;
+    color: var(--paper);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .filmstrip__slide :global(.filmstrip__photo) {
+    height: var(--gallery-photo-height);
+    width: auto;
+    max-width: 92vw;
+    object-fit: contain;
+    border: 1px solid var(--hairline);
+    /* Without this the photo shrinks to make room for its own caption. */
+    flex-shrink: 0;
+  }
+
+  /* Leaves room for the fixed header above and the thumbnail strip below. */
+  .filmstrip__slide {
+    padding-top: 13.5vh;
+    padding-bottom: 10.5vh;
+  }
+
+  /* --------------------------------------------------------------- arrows -- */
+
+  /* Large invisible hover zones down each edge, as real buttons so they are keyboard-reachable. */
+  .filmstrip__arrow {
+    position: fixed;
+    width: 38vw;
+    z-index: 9;
+    top: 0;
+    bottom: 0;
+    border: 0;
+    padding: 0;
+  }
+
+  .filmstrip__arrow[hidden] {
+    display: none;
+  }
+
+  .filmstrip__arrow--prev {
+    left: 0;
+  }
+
+  .filmstrip__arrow--next {
+    right: 0;
+  }
+
+  .filmstrip__arrow-glyph {
+    background: var(--ink);
+    position: fixed;
+    height: 7.5vh;
+    width: 7vh;
+    top: 50%;
+    transform: translate(0, -50%);
+    opacity: 0.25;
+    transition: opacity 0.2s ease-in;
+  }
+
+  .filmstrip__arrow--prev .filmstrip__arrow-glyph {
+    left: 2vh;
+  }
+
+  .filmstrip__arrow--next .filmstrip__arrow-glyph {
+    right: 2vh;
+  }
+
+  .filmstrip__arrow:hover .filmstrip__arrow-glyph,
+  .filmstrip__arrow:focus-visible .filmstrip__arrow-glyph {
+    opacity: 1;
+  }
+
+  /*
+   * The chevron is two CSS triangles: ::before is the dark one, ::after a white
+   * copy offset by 1.3vh that masks its middle and leaves an angled sliver.
+   */
+  .filmstrip__arrow-glyph::before,
+  .filmstrip__arrow-glyph::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-top: 2.5vh solid transparent;
+    border-bottom: 2.5vh solid transparent;
+    transform: translate(0, -50%);
+  }
+
+  .filmstrip__arrow--prev .filmstrip__arrow-glyph::before {
+    left: 2vh;
+    border-right: 2.5vh solid var(--paper-raised);
+  }
+
+  .filmstrip__arrow--prev .filmstrip__arrow-glyph::after {
+    left: 3.3vh;
+    border-right: 2.5vh solid var(--ink);
+  }
+
+  .filmstrip__arrow--next .filmstrip__arrow-glyph::before {
+    right: 2vh;
+    border-left: 2.5vh solid var(--paper-raised);
+  }
+
+  .filmstrip__arrow--next .filmstrip__arrow-glyph::after {
+    right: 3.3vh;
+    border-left: 2.5vh solid var(--ink);
+  }
+
+  /* ----------------------------------------------------------- small screens -- */
+
+  /* Below this width the filmstrip becomes a vertical stack. */
+  @media (max-width: 48rem) {
+    .filmstrip {
+      flex-direction: column;
+      overflow-x: hidden;
+      overflow-y: visible;
+      scroll-snap-type: none;
+      height: auto;
+      align-items: stretch;
+    }
+
+    .filmstrip__intro,
+    .filmstrip__slide {
+      flex: 0 0 auto;
+      height: auto;
+      width: 100%;
+      padding: 0 5vw 8vw;
+      scroll-snap-align: none;
+    }
+
+    .filmstrip__intro {
+      padding-top: 4vw;
+    }
+
+    .filmstrip__intro-card {
+      width: 100%;
+      min-height: 0;
+      padding: 6vw 5vw;
+      margin-bottom: 0;
+    }
+
+    .filmstrip__intro-card h3 {
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+
+    .filmstrip__intro-card p {
+      font-size: 15px;
+    }
+
+    .filmstrip__slide :global(.filmstrip__photo) {
+      height: auto;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .filmstrip__arrows {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import { initFilmstrip } from '../utils/gallery';
+
+  initFilmstrip();
+</script>

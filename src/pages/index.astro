@@ -1,0 +1,167 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+/*
+ * The homepage crossfades between all nine backgrounds. Only the first is eager;
+ * the rest load lazily behind the fade (7s per frame, 1.5s fade).
+ */
+const BACKGROUNDS = Array.from({ length: 9 }, (_, index) => `/images/bg-0${index + 1}.jpg`);
+
+const CYCLE = BACKGROUNDS.length * 7;
+---
+
+<BaseLayout
+  title="Rich King | Photography & Videography"
+  description="Photography and videography by Rich King."
+  pageId="index"
+>
+  <div class="slideshow" aria-hidden="true">
+    {
+      BACKGROUNDS.map((src, index) => (
+        <img
+          src={src}
+          alt=""
+          class="slideshow__frame"
+          loading={index === 0 ? 'eager' : 'lazy'}
+          fetchpriority={index === 0 ? 'high' : undefined}
+          decoding={index === 0 ? 'sync' : 'async'}
+          style={`animation-delay: ${index * 7}s;`}
+        />
+      ))
+    }
+    <span class="slideshow__overlay"></span>
+    <span class="slideshow__scrim"></span>
+  </div>
+
+  <header id="header">
+    <h1>Rich<br />King</h1>
+  </header>
+
+  <nav id="nav" aria-label="Sections">
+    <ul>
+      <li><a href="/photo">Photo</a></li>
+      <li><a href="/video">Video</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+  </nav>
+</BaseLayout>
+
+<style define:vars={{ cycle: `${CYCLE}s` }}>
+  .slideshow {
+    position: fixed;
+    inset: 0;
+    z-index: -20;
+    background: var(--paper);
+  }
+
+  .slideshow__frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    animation: slideshow var(--cycle) linear infinite;
+  }
+
+  /*
+   * Each frame is visible for 7s of the cycle with a 1.5s fade at either end.
+   * 9 frames × 7s = 63s, so one frame occupies 11.11% of the timeline and the
+   * fade is ~2.4% of it.
+   */
+  @keyframes slideshow {
+    0% {
+      opacity: 0;
+    }
+    2.4% {
+      opacity: 1;
+    }
+    11.11% {
+      opacity: 1;
+    }
+    13.5% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* 1×1 tiled texture at 5% over the slideshow. */
+  .slideshow__overlay {
+    position: absolute;
+    inset: 0;
+    background: url('/images/overlay.png') repeat;
+    opacity: 0.05;
+  }
+
+  .slideshow__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.45));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slideshow__frame {
+      animation: none;
+    }
+
+    .slideshow__frame:first-child {
+      opacity: 1;
+    }
+  }
+</style>
+
+<style is:global>
+  html[id='index'] {
+    overflow: hidden;
+  }
+
+  html[id='index'] #header {
+    margin: 11vh auto 0;
+    width: 100%;
+    text-align: center;
+    position: relative;
+  }
+
+  html[id='index'] #header h1 {
+    font-family: var(--font-ui);
+    font-size: 30vmin;
+    font-weight: bold;
+    color: var(--ink);
+    text-transform: uppercase;
+    cursor: default;
+    line-height: 0.95;
+  }
+
+  html[id='index'] #nav {
+    position: absolute;
+    bottom: 0;
+  }
+
+  @media (max-width: 48rem) {
+    html[id='index'] {
+      overflow: auto;
+    }
+
+    html[id='index'] #header {
+      margin-top: 18vh;
+    }
+
+    html[id='index'] #nav {
+      position: fixed;
+      bottom: 6vh;
+    }
+
+    html[id='index'] #nav ul li {
+      display: block;
+      margin: 0 auto 12px;
+      width: 70vw;
+      font-size: 16px;
+    }
+
+    html[id='index'] #nav ul li a {
+      padding: 16px 0;
+    }
+  }
+</style>

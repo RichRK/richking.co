@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Notice from '../components/Notice.astro';
+---
+
+<BaseLayout
+  title="Rich King | Sorry"
+  description="The page you were looking for could not be found."
+  page="404"
+  pageId="dialog"
+>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex" />
+  </Fragment>
+
+  <Header section="404" sectionHref="/" width="53.5vh" />
+
+  <Notice heading="Sorry.">We can’t find the content that you’re looking for.</Notice>
+
+  <nav id="nav" aria-label="Sections">
+    <ul>
+      <li><a href="/photo">Photo</a></li>
+      <li><a href="/video">Video</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+  </nav>
+</BaseLayout>

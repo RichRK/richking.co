@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Notice from '../components/Notice.astro';
+---
+
+<BaseLayout
+  title="Rich King | Thanks"
+  description="Your message has been sent."
+  page="thanks"
+  pageId="dialog"
+>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex" />
+  </Fragment>
+
+  <Header section="Contact" sectionHref="/contact" width="67vh" />
+
+  <Notice heading="Thanks!">Your message has been sent successfully.</Notice>
+
+  <nav id="nav" aria-label="Sections">
+    <ul>
+      <li><a href="/photo">Photo</a></li>
+      <li><a href="/video">Video</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+  </nav>
+</BaseLayout>

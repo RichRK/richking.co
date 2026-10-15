@@ -5,12 +5,9 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description: string;
-  /**
-   * Mirrors the legacy `data-page` attribute. An empty value marks the
-   * homepage, which uses the slideshow rather than a static background.
-   */
+  /** Page key on `<html data-page>`; empty marks the homepage (slideshow background). */
   page?: string;
-  /** Legacy `html id`, still used to scope page-specific styles. */
+  /** `id` on `<html>`, used to scope page-specific styles. */
   pageId?: string;
   ogImage?: string;
 }
@@ -27,16 +24,9 @@ const canonical = new URL(canonicalPath, Astro.site).href;
 const socialImage = new URL(ogImage ?? '/images/bg-01.jpg', Astro.site).href;
 
 /*
- * Inner pages sit on a photographic background, picked at random and kept for
- * 24 hours — the one bit of www/js/master.js worth carrying over. It runs
- * inline, before paint, so the background does not flash in after the page.
- *
- * The original built five vendor-prefixed gradient declarations by string
- * concatenation and injected a whole <style> tag; this sets one custom
- * property. Note bg-02 is deliberately absent, as it was in 2014.
- *
- * Kept as a string rather than inline markup so the whole file stays
- * parseable by Prettier.
+ * Inner pages get a random photographic background, kept for 24 hours. It runs
+ * inline, before paint, so it does not flash in. A string rather than inline
+ * markup so Prettier can parse this file. (bg-02 is deliberately absent.)
  */
 const backgroundScript = `
 (() => {

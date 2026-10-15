@@ -44,9 +44,6 @@ const albums = defineCollection({
     }),
 });
 
-/**
- * One YAML file per film in `src/content/videos/`, with its poster alongside.
- */
 const videos = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/videos' }),
   schema: ({ image }) =>

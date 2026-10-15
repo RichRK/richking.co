@@ -32,21 +32,10 @@ const { href, title, count, cover } = Astro.props;
 </a>
 
 <style>
-  /*
-   * Ported from the `.albumMain` / `.albumContainer` / `.albumTitleOverlay` /
-   * `.photoCount` block of styles.css. The cover used to be assigned by a
-   * per-album `a[href*="…"] { background-image: … }` rule — eight of them,
-   * hand-written. It is a real <img> passed as a prop now, so adding an album
-   * no longer means editing CSS.
-   */
   .album {
     position: relative;
     display: inline-block;
-    /*
-     * content-box on purpose. The 2014 stylesheet predates border-box, so its
-     * 0.8vh border sits outside the 37% width; under border-box the tile comes
-     * out 14px narrower than the original.
-     */
+    /* content-box on purpose: the 0.8vh border sits outside the 37% width. */
     box-sizing: content-box;
     width: 37%;
     margin: 0 3% 5%;
@@ -63,11 +52,9 @@ const { href, title, count, cover } = Astro.props;
   }
 
   /*
-   * The blur goes on the image, not on the clipping circle. Blurring the
-   * clipped element instead softens the clip itself and haloes the rim on
-   * hover. The image is also slightly oversized so its own blurred edge stays
-   * tucked under the border — the same trick, and for the same stated reason,
-   * as the original's 100.5% `.albumContainer`.
+   * Blur the image, not the clipping circle: blurring the clip softens it and
+   * haloes the rim. The image is oversized slightly so its blurred edge stays
+   * under the border.
    */
   .album__image {
     width: 100.5%;
@@ -83,7 +70,6 @@ const { href, title, count, cover } = Astro.props;
     filter: blur(5px);
   }
 
-  /* Always-visible white label, sitting low inside the circle. */
   .album__title {
     position: absolute;
     left: 0;
@@ -96,7 +82,6 @@ const { href, title, count, cover } = Astro.props;
   .album__title h3 {
     display: inline-block;
     background: rgba(255, 255, 255, 0.95);
-    /* Lifts the title clear of whatever photograph is behind it. */
     box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.4);
     padding: 0.65vw 1.3vw;
     color: var(--paper);
@@ -107,17 +92,13 @@ const { href, title, count, cover } = Astro.props;
     transition: transform 0.2s ease;
   }
 
-  /*
-   * On hover the title rises to the centre of the circle at 1.5x. -450% of the
-   * label's own height is what lands it there, exactly as in the original.
-   */
+  /* -450% of the label's own height lands the title at the circle's centre. */
   .album:hover .album__title h3,
   .album:focus-visible .album__title h3 {
     background: rgba(255, 255, 255, 0.9);
     transform: translateY(-450%) scale(1.5);
   }
 
-  /* Photo count, revealed on hover just below the risen title. */
   .album__count {
     position: absolute;
     left: 0;
@@ -149,7 +130,6 @@ const { href, title, count, cover } = Astro.props;
   }
 
   @media (max-width: 48rem) {
-    /* One circle per row, labels always shown — there is no hover to rely on. */
     .album {
       width: 74%;
       margin: 0 auto 8%;

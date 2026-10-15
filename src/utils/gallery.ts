@@ -1,12 +1,6 @@
 /**
- * Filmstrip navigation.
- *
- * Replaces www/js/photoGallery.js, which was ~250 lines of jQuery that stamped
- * pixel widths onto every image from hardcoded aspect ratios, tracked
- * `scrollLeft` offsets in parallel arrays, and ran a 500ms `setInterval` to
- * recompute all of it while images loaded. CSS scroll-snap handles the layout
- * and centring, so what is left is: track which slide is current, keep the
- * thumbnail strip in step, and move on arrow keys or clicks.
+ * Filmstrip navigation: tracks the current slide, keeps the thumbnail strip in
+ * step, and handles arrow keys and clicks.
  */
 
 const SMALL_SCREEN = '(max-width: 48rem)';
@@ -45,7 +39,7 @@ export function initFilmstrip(): void {
       else thumb.removeAttribute('aria-current');
     });
 
-    // The original faded the arrows out and set visibility:hidden at each end.
+    // Arrows hide at each end.
     if (prev) prev.hidden = index === 0;
     if (next) next.hidden = index === slides.length - 1;
 
@@ -72,9 +66,8 @@ export function initFilmstrip(): void {
     setCurrent(slides.indexOf(target));
   }
 
-  // One observer replaces the offset bookkeeping the jQuery version maintained
-  // by hand. `scrollIntoView` and plain user scrolling both flow through here,
-  // so the thumbnail strip stays correct however the photo was reached.
+  // `scrollIntoView` and plain user scrolling both flow through here, so the
+  // thumbnail strip stays correct however the photo was reached.
   const observer = new IntersectionObserver(
     (entries) => {
       if (navigating) return;
@@ -118,7 +111,7 @@ export function initFilmstrip(): void {
     }
   });
 
-  // Deep links like /photo/nicaragua#photo-12 still work, as they did in 2014.
+  // Deep links like /photo/nicaragua#photo-12 jump straight to that photo.
   const fromHash = Number(location.hash.match(/^#photo-(\d+)$/)?.[1]);
   if (!Number.isNaN(fromHash)) goTo(fromHash);
   else setCurrent(0);

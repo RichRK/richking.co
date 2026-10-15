@@ -12,18 +12,9 @@ import Header from '../components/Header.astro';
   <Header section="Contact" sectionHref="/contact" width="67.5vh" />
 
   <main id="wrapper">
-    {
-      /*
-       * NOTE: this form has no working backend.
-       *
-       * It posted to Netlify Forms until March 2026, when the move to
-       * Statichost stripped the `data-netlify` attribute and the honeypot
-       * (commit 9f4eccf) and left it posting to /thanks — a static page. The
-       * markup is ported as-is, still non-functional, pending a decision on a
-       * form service. Until then the mailto link below is the route that works.
-       */
-    }
-    <form name="contact" action="/thanks" method="POST">
+    <p class="unavailable" role="status">The contact form is temporarily unavailable.</p>
+
+    <form name="contact" inert>
       <label for="your_name">Name</label>
       <input id="your_name" name="your_name" type="text" spellcheck="false" autocomplete="name" />
 
@@ -39,7 +30,7 @@ import Header from '../components/Header.astro';
       <label for="message">Message</label>
       <textarea id="message" name="message" rows="6"></textarea>
 
-      <button type="submit" class="send">
+      <button type="button" class="send" disabled>
         <span>Send</span>
         <img src="/images/arrow.png" alt="" width="44" height="75" />
       </button>
@@ -126,9 +117,24 @@ import Header from '../components/Header.astro';
     height: auto;
   }
 
-  .send:hover {
-    background: var(--paper);
-    color: var(--ink);
+  .send:disabled {
+    cursor: not-allowed;
+  }
+
+  form[inert] {
+    opacity: 0.5;
+  }
+
+  .unavailable {
+    position: relative;
+    z-index: 50;
+    width: fit-content;
+    margin: 0 auto 4vh;
+    padding: 1vh 2vh;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-ui);
+    text-align: center;
   }
 
   @media (max-width: 48rem) {

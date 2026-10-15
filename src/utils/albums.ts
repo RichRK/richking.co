@@ -5,10 +5,8 @@ export type Album = CollectionEntry<'albums'>['data'];
 export type Photo = Album['photos'][number];
 
 /**
- * Albums with an explicit `order` in their album.yaml keep the hand-picked
- * sequence the 2014 site hardcoded into photo.html. Anything dropped in without
- * one sorts after those, newest capture first, so a new album appears without
- * anyone having to renumber the others.
+ * Albums with an explicit `order` come first, in that order. The rest follow,
+ * newest capture first, so a new album appears without renumbering the others.
  */
 export async function getAlbums(): Promise<Album[]> {
   const entries = await getCollection('albums');

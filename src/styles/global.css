@@ -1,12 +1,4 @@
-/*
- * Ported from the 2014 site's styles.css (RESET / FONTS / ANIMATIONS / MAIN /
- * GLOBAL sections). The layout is deliberately still driven by vh/vw units —
- * that proportional scaling is what makes the site look the way it does.
- *
- * Changes from the original: colours and repeated measurements are now custom
- * properties, the IE-era font formats (eot/ttf/svg) and vendor prefixes are
- * gone, and the page-specific sections have moved into scoped component styles.
- */
+/* Layout is deliberately driven by vh/vw units: proportional scaling gives the site its look. */
 
 /* ---------------------------------------------------------------- tokens -- */
 
@@ -24,15 +16,10 @@
   --nav-width: 35vh;
   --transition: 0.2s ease;
 
-  /* Set per-page by src/utils/background.ts. */
   --page-background: url('/images/bg-01.jpg');
   --background-scrim: rgba(0, 0, 0, 0.7);
 
-  /*
-   * The 2014 gallery sized photos at a flat 75vh. They lose a few vh here to
-   * make room for the EXIF caption underneath, which the original had no
-   * equivalent of.
-   */
+  /* Photos are a little shorter than 75vh to leave room for the EXIF caption. */
   --gallery-photo-height: 72vh;
 }
 
@@ -148,14 +135,14 @@ html {
 }
 
 /*
- * Inner pages sit on a randomly chosen photographic background behind a scrim.
- * The original built this by string-concatenating five vendor-prefixed
- * gradients into an injected <style> tag; it is now one custom property.
+ * On the root, not on body: an in-flow header's top margin collapses through
+ * body and shifts its box down, and a background on body would then leave a
+ * strip of html's own colour above it.
  */
-html[data-page]:not([data-page='']) body {
+html[data-page]:not([data-page='']) {
   background:
     linear-gradient(to bottom, var(--background-scrim) 0%, var(--background-scrim) 100%) fixed,
-    var(--page-background) no-repeat center bottom fixed;
+    var(--page-background) no-repeat center bottom fixed var(--paper);
   background-size: cover;
 }
 
@@ -288,7 +275,7 @@ h3 {
   top: 0;
   left: 0;
   z-index: 120;
-  /* content-box: the 2014 rule sized the 4vh bar independently of its padding. */
+  /* content-box: the 4vh bar is sized independently of its padding. */
   box-sizing: content-box;
   width: 4vh;
   padding: 5vh 3vh 2vh 5vh;

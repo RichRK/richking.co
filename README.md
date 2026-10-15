@@ -91,10 +91,11 @@ resolves to the same output file as the real page and overwrites it.
 
 ## Known gaps
 
-- **The contact form has no backend.** It posts to `/thanks`, a static page. The
-  Netlify Forms wiring and honeypot were stripped in March 2026 and never
-  replaced. The markup is ported as-is and remains non-functional; it needs a
-  form service or to be swapped for a mailto link.
+- **The contact form is disabled.** It had no backend: the Netlify Forms wiring
+  and honeypot were stripped in March 2026 and the form posted to `/thanks`, a
+  static page. The page now shows the form greyed out with a notice. Re-enable it
+  with a form service, or replace it with a mailto link. `/thanks` is unreachable
+  from the site until then and is left out of the sitemap.
 - **Alt text is generated.** All 174 photos get `"<Album> — photo N"`. Real
   descriptions can be filled in per photo via `album.yaml` at any time.
 - **Source resolution is capped by what's in the repo** — 1555×1037 landscape,

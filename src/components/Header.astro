@@ -2,12 +2,7 @@
 interface Props {
   section: string;
   sectionHref: string;
-  /**
-   * The 2014 stylesheet gave the header a fixed vh width on each page so the
-   * "Rich King" wordmark and the section block sat centred as a pair — 62vh on
-   * photo, 67.5vh on contact, and so on. Kept as a prop rather than five
-   * near-identical `html[id=…] #header` rules.
-   */
+  /** Fixed vh width so the wordmark and section block sit centred as a pair. */
   width?: string;
   /** The gallery pins the header over the filmstrip. */
   fixed?: boolean;
@@ -59,7 +54,6 @@ const { section, sectionHref, width = '62vh', fixed = false } = Astro.props;
     color: var(--paper);
   }
 
-  /* Stacked and centred once the two-column float stops fitting. */
   @media (max-width: 48rem) {
     .site-header,
     .site-header--fixed {

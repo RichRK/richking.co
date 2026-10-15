@@ -54,15 +54,8 @@ const WIDTHS = [400, 800, 1200, 1600];
 
 <style>
   /*
-   * The 2014 gallery was a horizontal filmstrip: images inline-block inside a
-   * white-space:nowrap wrapper, each 75vh tall with a 60vw right margin, and
-   * ~250 lines of jQuery animating `scrollLeft` to keep the current photo
-   * centred. CSS scroll-snap does the centring natively, so all that arithmetic
-   * — plus the 500ms setInterval that recomputed it during image load — is gone.
-   *
-   * Each slide is a full viewport wide with the photo centred inside it, which
-   * reproduces the original's resting appearance without needing to know the
-   * image's aspect ratio up front.
+   * Each slide is a full viewport wide with the photo centred inside it, so
+   * scroll-snap can centre photos without knowing their aspect ratio up front.
    */
   .filmstrip {
     display: flex;
@@ -91,11 +84,9 @@ const WIDTHS = [400, 800, 1200, 1600];
     scroll-snap-stop: always;
   }
 
-  /* The white summary card that opens every album. */
   .filmstrip__intro-card {
     background: var(--surface);
-    /* 35vw of content plus the original's 2.5vw padding either side. The 2014
-       stylesheet predates border-box, so the width has to absorb it here. */
+    /* 35vw of content plus 2.5vw of padding either side. */
     width: 40vw;
     min-height: 35vh;
     padding: 4vh 2.5vw;
@@ -140,11 +131,7 @@ const WIDTHS = [400, 800, 1200, 1600];
 
   /* --------------------------------------------------------------- arrows -- */
 
-  /*
-   * Large invisible hover zones down each edge, exactly as the original —
-   * but as real buttons, so they are keyboard-reachable and announce
-   * themselves.
-   */
+  /* Large invisible hover zones down each edge, as real buttons so they are keyboard-reachable. */
   .filmstrip__arrow {
     position: fixed;
     width: 38vw;
@@ -192,13 +179,8 @@ const WIDTHS = [400, 800, 1200, 1600];
   }
 
   /*
-   * The mark on the white block is a chevron, not a solid triangle — and the
-   * original drew it without any chevron primitive. It stacked two identical
-   * CSS triangles, a dark one and a white "clone" offset by 1.3vh, so the
-   * clone masks the middle of the dark one and leaves an angled sliver.
-   *
-   * Reproduced here with two pseudo-elements: ::before is the dark triangle,
-   * ::after the white clone that paints over it.
+   * The chevron is two CSS triangles: ::before is the dark one, ::after a white
+   * copy offset by 1.3vh that masks its middle and leaves an angled sliver.
    */
   .filmstrip__arrow-glyph::before,
   .filmstrip__arrow-glyph::after {
@@ -234,10 +216,7 @@ const WIDTHS = [400, 800, 1200, 1600];
 
   /* ----------------------------------------------------------- small screens -- */
 
-  /*
-   * Below this width the filmstrip becomes the vertical stack that used to be a
-   * separate hand-maintained site at m.richking.co.
-   */
+  /* Below this width the filmstrip becomes a vertical stack. */
   @media (max-width: 48rem) {
     .filmstrip {
       flex-direction: column;

@@ -73,13 +73,9 @@ const videos = await Promise.all(
 
 <style>
   /*
-   * Ported from `.aspectRatioContainer` / `.videoContainer` / `.duration` /
-   * `.playCircle` / `.playButton`.
-   *
-   * At rest: a full-width white band across the middle carrying the title, and
-   * a small grey duration chip just beneath it. There is deliberately no play
-   * button until you hover — on hover the band slides to the top, the play
-   * circle fades in at the centre, and the chip drops to the bottom.
+   * At rest: a white title band across the middle with a grey duration chip
+   * beneath. On hover the band slides to the top, the play circle fades in and
+   * the chip drops to the bottom.
    */
   .film {
     display: inline-block;
@@ -94,7 +90,7 @@ const videos = await Promise.all(
     position: relative;
     display: block;
     aspect-ratio: 16 / 9;
-    /* The original laid a flat 20% black wash over every poster. */
+    /* Flat 20% black wash over every poster. */
     background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
     background-size: cover;
     background-position: center;
@@ -147,7 +143,7 @@ const videos = await Promise.all(
     transform: translateY(6vw);
   }
 
-  /* Hidden until hover, exactly as the original. */
+  /* Hidden until hover. */
   .film__circle,
   .film__play {
     display: none;
@@ -156,7 +152,7 @@ const videos = await Promise.all(
   }
 
   .film__circle {
-    /* content-box so the 3px ring sits outside the 10% width, as in 2014. */
+    /* content-box so the 3px ring sits outside the 10% width. */
     box-sizing: content-box;
     width: 10%;
     height: 0;
@@ -190,11 +186,6 @@ const videos = await Promise.all(
 
   /* ---------------------------------------------------------------- dialog -- */
 
-  /*
-   * The original faked a modal with `:target` anchors and hid/showed it with
-   * CSS, then drove six YouTube IFrame API players from ~270 lines of inline
-   * script to pause on close. A real <dialog> does all of that natively.
-   */
   .film-dialog {
     border: 0;
     padding: 0;
@@ -352,8 +343,7 @@ const videos = await Promise.all(
 
   for (const dialog of document.querySelectorAll<HTMLDialogElement>('.film-dialog')) {
     const stop = () => {
-      // Clearing src unloads the player, which is what stops playback. The
-      // original needed the full IFrame API to achieve this.
+      // Clearing src unloads the player, which stops playback.
       const iframe = dialog.querySelector('iframe');
       if (iframe) iframe.removeAttribute('src');
     };
@@ -361,7 +351,7 @@ const videos = await Promise.all(
     dialog.addEventListener('close', stop);
     dialog.querySelector('[data-close]')?.addEventListener('click', () => dialog.close());
 
-    // Clicking the backdrop closes, matching the old anchor-based behaviour.
+    // Clicking the backdrop closes.
     dialog.addEventListener('click', (event) => {
       if (event.target === dialog) dialog.close();
     });

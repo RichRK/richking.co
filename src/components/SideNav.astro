@@ -1,8 +1,5 @@
 ---
-/**
- * The fixed hamburger in the top-left that slides a page list out on hover.
- * Ported from the `#sidenav` block repeated verbatim across every 2014 page.
- */
+/** The fixed hamburger that slides a page list out on hover. */
 const links = [
   { href: '/', label: 'Home' },
   { href: '/photo', label: 'Photo' },
@@ -36,11 +33,7 @@ const current = Astro.url.pathname.replace(/\/$/, '') || '/';
 </nav>
 
 <style>
-  /*
-   * The original markup nested <li> inside <a>, which is invalid; this inverts
-   * it. The padding therefore moves from the li to the anchor so the whole row
-   * stays clickable and the hover highlight still fills the strip.
-   */
+  /* Padding lives on the anchor so the whole row is clickable. */
   #pageList ul li {
     padding: 0;
   }
@@ -60,7 +53,6 @@ const current = Astro.url.pathname.replace(/\/$/, '') || '/';
     font-style: italic;
   }
 
-  /* On touch there is no hover, so keep the list reachable by tap. */
   @media (hover: none) {
     #lineIcon {
       padding: 3vh;
@@ -79,9 +71,8 @@ const current = Astro.url.pathname.replace(/\/$/, '') || '/';
 </style>
 
 <script>
-  // Hover opens the panel on pointer devices (pure CSS). On touch, tapping the
-  // icon toggles it — without this the page list is unreachable on a phone,
-  // which the 2014 site solved by shipping an entirely separate mobile site.
+  // Hover opens the panel on pointer devices (CSS only); on touch, tapping the
+  // icon toggles it.
   const icon = document.getElementById('lineIcon');
 
   if (icon && window.matchMedia('(hover: none)').matches) {
